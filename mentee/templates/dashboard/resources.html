@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Library{% endblock %}
+{% block content %}
+<h2>Audio & Video Library</h2>
+<div class="card">
+    <h3>Pre-Game Visualization (Audio)</h3>
+    <audio controls>
+        <source src="#" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</div>
+<div class="card">
+    <h3>Recovery Breathing (Video)</h3>
+    <div style="background:#eee; height:200px; display:flex; align-items:center; justify-content:center;">
+        [Video Player Placeholder]
+    </div>
+</div>
+{% endblock %}

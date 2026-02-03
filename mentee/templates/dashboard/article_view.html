@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/articles.css') }}">
+
+<div class="reader-container">
+
+    <div class="reader-nav">
+        <a href="{{ url_for('dashboard.articles') }}" class="back-link">← Library</a>
+        <div class="reader-actions">
+            <span class="read-time">{{ article.read_time }}</span>
+            <button class="action-icon">🔖</button>
+        </div>
+    </div>
+
+    <header class="reader-header">
+        <div class="header-badges">
+            <span class="type-badge {{ article.type|lower|replace(' ', '-') }}">{{ article.type }}</span>
+            {% for badge in article.badges %}
+            <span class="auth-badge-sm">✓ {{ badge }}</span>
+            {% endfor %}
+        </div>
+        <h1>{{ article.title }}</h1>
+        <p class="subtitle">{{ article.subtitle }}</p>
+    </header>
+
+    <article class="reader-body">
+        
+        {% if article.type == 'Quick Reset' %}
+        <div class="tpl-reset">
+            <div class="reset-alert">
+                <span class="alert-icon">⚡</span>
+                <div class="alert-text">
+                    <strong>EMERGENCY PROTOCOL</strong>
+                    <span>Use when: {{ article.content.when }}</span>
+                </div>
+            </div>
+            
+            <div class="reset-grid">
+                <div class="reset-col">
+                    <h3>The Situation</h3>
+                    <p>{{ article.content.situation }}</p>
+                    <h3>The Science</h3>
+                    <p>{{ article.content.why }}</p>
+                </div>
+                <div class="reset-col fix-col">
+                    <h3>THE FIX</h3>
+                    <ul class="fix-list">
+                        {% for step in article.content.fix %}
+                        <li>{{ step }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% elif article.type == 'Deep Dive' %}
+        <div class="tpl-deep">
+            <img src="{{ url_for('static', filename=article.image) }}" style="width:100%; border-radius:12px; margin-bottom:2rem;">
+            
+            <div class="deep-intro">{{ article.content.intro }}</div>
+            {% for section in article.content.sections %}
+            <div class="deep-section">
+                <h3>{{ section.heading }}</h3>
+                <p>{{ section.body }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% elif article.type == 'Protocol' %}
+        <div class="tpl-protocol">
+            <div class="protocol-intro">{{ article.content.intro }}</div>
+            <div class="checklist-container">
+                {% for step in article.content.steps %}
+                <label class="check-item">
+                    <input type="checkbox">
+                    <span class="check-text">{{ step }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% elif article.type == 'Breakdown' %}
+        <div class="tpl-breakdown">
+            <div class="context-box">{{ article.content.context }}</div>
+            <div class="timeline">
+                {% for moment in article.content.moments %}
+                <div class="timeline-item">
+                    <div class="time-marker">{{ moment.time }}</div>
+                    <div class="analysis-box">
+                        <p>{{ moment.analysis }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="takeaway-box">
+                <h4>Core Takeaway</h4>
+                <p>{{ article.content.takeaway }}</p>
+            </div>
+        </div>
+
+        {% elif article.type == 'Playbook' %}
+        <div class="tpl-playbook">
+            <div class="rules-grid">
+                {% for rule in article.content.rules %}
+                <div class="rule-card">
+                    <div class="rule-num">Rule 0{{ loop.index }}</div>
+                    <h4>{{ rule.rule }}</h4>
+                    <p>{{ rule.desc }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% else %}
+        <p>Content unavailable.</p>
+        {% endif %}
+
+    </article>
+
+</div>
+{% endblock %}

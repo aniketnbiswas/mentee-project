@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Mental Edge Library{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/articles.css') }}">
+
+<div class="library-container">
+
+    <header class="library-hero">
+        <div class="hero-stats-badge">
+            <span class="pulse-dot"></span> {{ total_count }} Training Modules
+        </div>
+        <h1>The Mental Edge <span class="text-gradient">System</span></h1>
+        <p>The world's most comprehensive database of performance psychology protocols, battle-tested by elite competitors.</p>
+        
+        <button class="btn btn-primary glow-btn" onclick="Library.openWizard()">
+            ⚡ Build My Curriculum
+        </button>
+    </header>
+
+    <section class="section-block">
+        <div class="section-header">
+            <h3>Featured Collections</h3>
+            <span class="sub-label">Curated Toolkits</span>
+        </div>
+        <div class="collections-scroller">
+            {% for c in collections %}
+            <div class="collection-card" style="background: {{ c.bg }}">
+                <div class="col-content">
+                    <h4>{{ c.title }}</h4>
+                    <p>{{ c.desc }}</p>
+                    <button class="btn-sm">Explore Kit &rarr;</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section-block">
+        <div class="section-header">
+            <h3>Structured Learning Paths</h3>
+            <span class="sub-label">Step-by-Step Journeys</span>
+        </div>
+        <div class="paths-grid">
+            {% for p in paths %}
+            <div class="path-card">
+                <div class="path-icon" style="color: {{ p.color }}">{{ p.icon }}</div>
+                <div class="path-info">
+                    <h4>{{ p.title }}</h4>
+                    <span class="path-steps">{{ p.steps }}</span>
+                </div>
+                <button class="path-btn">Start</button>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <div class="library-toolbar sticky-filter">
+        <div class="filter-scroll">
+            <button class="filter-pill active" data-filter="all" onclick="Library.filter('all', this)">All Protocols</button>
+            <button class="filter-pill" data-filter="Anti-Choking" onclick="Library.filter('Anti-Choking', this)">🛡️ Anti-Choking</button>
+            <button class="filter-pill" data-filter="Confidence" onclick="Library.filter('Confidence', this)">🚀 Confidence</button>
+            <button class="filter-pill" data-filter="Focus" onclick="Library.filter('Focus', this)">🎯 Focus</button>
+            <button class="filter-pill" data-filter="Recovery" onclick="Library.filter('Recovery', this)">❤️‍🩹 Recovery</button>
+            <button class="filter-pill" data-filter="Strategy" onclick="Library.filter('Strategy', this)">♟️ Strategy</button>
+        </div>
+        
+        <div class="custom-dropdown" id="sport-dropdown">
+            <div class="dropdown-btn" onclick="Library.toggleDropdown()">
+                <span id="dropdown-label">All Sports</span>
+                <span style="font-size:0.7rem">▼</span>
+            </div>
+            <div class="dropdown-menu">
+                <div class="dropdown-item selected" onclick="Library.selectSport('all', this)">All Sports</div>
+                <div class="dropdown-item" onclick="Library.selectSport('Tennis', this)">🎾 Tennis</div>
+                <div class="dropdown-item" onclick="Library.selectSport('Chess', this)">♟️ Chess</div>
+                <div class="dropdown-item" onclick="Library.selectSport('Basketball', this)">🏀 Basketball</div>
+                <div class="dropdown-item" onclick="Library.selectSport('General', this)">🧠 General Performance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="library-grid" class="library-grid">
+        {% for a in articles %}
+        <div class="article-card" data-category="{{ a.category }}" data-sport="{{ a.sport }}">
+            <div class="card-image">
+                <img src="{{ url_for('static', filename=a.image) }}" alt="{{ a.title }}" loading="lazy">
+                
+                <div class="card-badges">
+                    {% for badge in a.badges %}
+                    <span class="auth-badge">{{ badge }}</span>
+                    {% endfor %}
+                </div>
+                <div class="card-overlay-bottom">
+                    <span class="type-badge {{ a.type|lower|replace(' ', '-') }}">{{ a.type }}</span>
+                </div>
+            </div>
+            
+            <div class="card-content">
+                <div class="meta-row">
+                    <span class="meta-item sport-tag">{{ a.sport }}</span>
+                    <span class="meta-item level-tag {{ a.level|lower }}">{{ a.level }}</span>
+                    <span class="meta-item time-tag">⏱ {{ a.read_time }}</span>
+                </div>
+                
+                <h3>{{ a.title }}</h3>
+                <p>{{ a.subtitle }}</p>
+                
+                <a href="{{ url_for('dashboard.read_article', article_id=a.id) }}" class="read-btn">
+                    {% if a.type == 'Protocol' %} Execute Protocol
+                    {% elif a.type == 'Quick Reset' %} Get Immediate Fix
+                    {% elif a.type == 'Playbook' %} Open Playbook
+                    {% else %} Read Analysis {% endif %}
+                    &rarr;
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="curriculum-wizard" class="wizard-modal">
+        <div class="wizard-content">
+            <button class="close-wizard" onclick="Library.closeWizard()">×</button>
+            <div class="wizard-step active" id="step-1">
+                <h2>Choose Your Arena</h2>
+                <div class="wizard-options">
+                    <button onclick="Library.nextStep('Tennis')">Tennis</button>
+                    <button onclick="Library.nextStep('Chess')">Chess</button>
+                    <button onclick="Library.nextStep('Team Sports')">Team Sports</button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step-2">
+                <h2>Biggest Challenge?</h2>
+                <div class="wizard-options">
+                    <button onclick="Library.finishWizard('Anti-Choking')">Choking Under Pressure</button>
+                    <button onclick="Library.finishWizard('Confidence')">Self-Doubt</button>
+                    <button onclick="Library.finishWizard('Focus')">Distraction</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/articles.js') }}"></script>
+{% endblock %}

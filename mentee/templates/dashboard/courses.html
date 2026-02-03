@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 140px;">
+    <div class="section-header" style="margin-bottom: 3rem;">
+        <h1 class="text-gradient">Mental Mastery Courses</h1>
+        <p style="color: var(--text-muted); max-width: 600px;">Structured curriculums to build long-term resilience and focus.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        
+        <div class="feature-card">
+            <div style="height: 150px; background: rgba(6, 182, 212, 0.1); border-radius: var(--radius-md); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 3rem;">🧠</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                <span style="font-size:0.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px;">Beginner</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">4 Modules</span>
+            </div>
+            <h3>Entering "The Zone"</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Learn the breathing triggers and mental cues to enter a flow state on command before the whistle blows.
+            </p>
+            <div style="background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; margin-bottom: 1.5rem;">
+                <div style="background: var(--primary); width: 0%; height: 100%; border-radius: 3px;"></div>
+            </div>
+            <button class="btn btn-outline" style="width:100%">Start Course</button>
+        </div>
+
+        <div class="feature-card">
+            <div style="height: 150px; background: rgba(59, 130, 246, 0.1); border-radius: var(--radius-md); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 3rem;">🛡️</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                <span style="font-size:0.75rem; color:var(--warning); text-transform:uppercase; letter-spacing:1px;">Intermediate</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">6 Modules</span>
+            </div>
+            <h3>Unshakeable Confidence</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                How to detach your self-worth from the scoreboard and play without fear of failure.
+            </p>
+            <div style="background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; margin-bottom: 1.5rem;">
+                <div style="background: var(--primary); width: 30%; height: 100%; border-radius: 3px;"></div>
+            </div>
+            <button class="btn btn-primary" style="width:100%">Continue</button>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

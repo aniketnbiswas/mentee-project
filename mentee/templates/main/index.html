@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding-top: 140px; padding-bottom: 5rem;">
+
+    <section style="text-align: center; margin-bottom: 6rem;">
+        <span style="color:var(--primary); font-weight:700; letter-spacing:2px; text-transform:uppercase; font-size:0.85rem; margin-bottom:1.5rem; display:block;">The Mental OS for Elite Athletes</span>
+        
+        <h1 style="font-size: 4rem; line-height: 1.1; margin-bottom: 1.5rem;">
+            Where the Mind <br>
+            <span class="text-gradient">Meets the Medal.</span>
+        </h1>
+        
+        <p style="font-size: 1.2rem; color: #cbd5e1; max-width: 650px; margin: 0 auto 2.5rem auto;">
+            You can't out-train a weak mindset. Join the platform where serious athletes build focus, resilience, and unshakeable confidence.
+        </p>
+        
+        <div style="display:flex; gap:1rem; justify-content:center;">
+            <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Start Free Trial</a>
+            <a href="{{ url_for('dashboard.drills_hub') }}" class="btn btn-outline" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Explore Drills</a>
+        </div>
+    </section>
+
+    <section style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 3rem 0; margin-bottom: 6rem; text-align: center;">
+        <div>
+            <div style="font-size: 2.5rem; font-weight: 700; color: white;">5,000+</div>
+            <div style="color: var(--text-muted);">Active Athletes</div>
+        </div>
+        <div>
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">350+</div>
+            <div style="color: var(--text-muted);">Elite Mentors</div>
+        </div>
+        <div>
+            <div style="font-size: 2.5rem; font-weight: 700; color: white;">12</div>
+            <div style="color: var(--text-muted);">Sports Supported</div>
+        </div>
+    </section>
+
+    <section style="margin-bottom: 8rem;">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h2>Total Performance Arsenal</h2>
+            <p style="color: var(--text-muted);">Three pillars to unlock "The Zone" on demand.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(6, 182, 212, 0.2); color: var(--primary);">⚡</div>
+                <h3>Cognitive Gym</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Sharpen reaction time and decision-making speed with gamified neuro-drills.
+                </p>
+                <a href="{{ url_for('dashboard.drills_hub') }}" style="color: var(--primary); font-weight: 600;">Start Training &rarr;</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(244, 63, 94, 0.2); color: #F43F5E;">🧠</div>
+                <h3>Performance Marketplace</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Book 1-on-1 sessions with sports psychologists starting at $25. Next slot available tomorrow.
+                </p>
+                <a href="{{ url_for('dashboard.mentors') }}" style="color: #F43F5E; font-weight: 600;">Find a Mentor &rarr;</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-box" style="background: rgba(250, 204, 21, 0.2); color: #FACC15;">📊</div>
+                <h3>Resilience Tracker</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Log your mental state daily. Visualize your confidence trends and break performance slumps.
+                </p>
+                <a href="{{ url_for('dashboard.journal') }}" style="color: #FACC15; font-weight: 600;">Open Journal &rarr;</a>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+{% endblock %}

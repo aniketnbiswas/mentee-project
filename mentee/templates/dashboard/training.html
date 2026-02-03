@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Mental Gym{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 140px;">
+    <div class="section-header" style="margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: end;">
+        <div>
+            <h1 class="text-gradient">Cognitive Drills</h1>
+            <p style="color: var(--text-muted); max-width: 600px;">
+                Isolate and train the mental muscles used in competition: Reaction, Memory, and Focus.
+            </p>
+        </div>
+        <div style="text-align: right; color: var(--accent); font-weight: 600;">● LIVE TRACKING</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem;">
+        
+        <div class="feature-card">
+            <div class="game-header">
+                <div class="icon-box-small">⚡</div>
+                <div><h3>Reaction Speed</h3><div class="status-indicator">Active</div></div>
+            </div>
+            <p style="color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                Simulate the starting gun. Wait for Green. 
+                <br><strong>Sports:</strong> Sprinting, Goalkeeping, Batting.
+            </p>
+            <div id="game-impulse" class="game-area">
+                <div class="game-overlay" onclick="ImpulseGame.init()">TAP TO START</div>
+                <div class="game-status-text" id="impulse-status" style="font-size:1.5rem; font-weight:700;">WAIT</div>
+            </div>
+            <div class="game-metrics">
+                <span>Last: <b id="impulse-last" style="color:white">--</b></span>
+                <span>Best: <b id="impulse-best" style="color:var(--primary)">--</b></span>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="game-header">
+                <div class="icon-box-small">🛡️</div>
+                <div><h3>Tactical Memory</h3><div class="status-indicator">Active</div></div>
+            </div>
+            <p style="color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                Memorize the play pattern. Stabilize after errors.
+                <br><strong>Sports:</strong> Football, Basketball, Tennis.
+            </p>
+            <div id="game-resilience" class="game-area">
+                <div class="game-overlay" onclick="ResilienceGame.init()">TAP TO START</div>
+                <div class="pattern-grid" id="resilience-grid"></div>
+            </div>
+            <div class="game-metrics">
+                <span>Streak: <b id="resilience-streak" style="color:white">0</b></span>
+                <span>Status: <b id="resilience-status" style="color:var(--warning)">Ready</b></span>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="game-header">
+                <div class="icon-box-small">🎯</div>
+                <div><h3>Field Vision</h3><div class="status-indicator">Active</div></div>
+            </div>
+            <p style="color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                Rapid visual scanning under pressure.
+                <br><strong>Sports:</strong> Soccer, Hockey, Quarterback.
+            </p>
+            <div id="game-focus" class="game-area">
+                <div class="game-overlay" onclick="FocusGame.init()">TAP TO START</div>
+                <div class="focus-grid" id="focus-grid"></div>
+            </div>
+            <div class="game-metrics">
+                <span>Time: <b id="focus-time" style="color:white">--</b></span>
+                <span>Errors: <b id="focus-errors" style="color:var(--danger)">0</b></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/games.js') }}"></script>
+{% endblock %}

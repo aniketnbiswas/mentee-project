@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MENTEE | {% block title %}Elite Mental Training{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="{{ url_for('main.index') }}" class="logo-area">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Mentee" class="logo-img">
+            </a>
+            
+            <div class="nav-links">
+                <div class="dropdown">
+                    <div class="dropbtn">The Gym ▾</div>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('dashboard.drills_hub') }}">Drills Arena</a>
+                        <a href="{{ url_for('dashboard.articles') }}">The Library</a>
+                        <a href="{{ url_for('dashboard.ai_counselling') }}">AI Counselling</a>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('main.philosophy') }}">Philosophy</a>
+                <a href="{{ url_for('dashboard.mentors') }}">Mentors</a>
+                <a href="{{ url_for('dashboard.journal') }}">Journal</a>
+                
+                <div style="width:1px; height:24px; background:rgba(255,255,255,0.1); margin:0 10px;"></div>
+                
+                {% if current_user.is_authenticated %}
+                    <a href="#" style="color:var(--primary);">{{ current_user.name }}</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Log Out</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Log In</a>
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Start Training</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container" style="text-align: center; padding: 4rem 0; color: #94A3B8;">
+            <div style="margin-bottom: 1.5rem;">
+                <a href="{{ url_for('main.index') }}" style="color: #94A3B8; margin: 0 10px; text-decoration: none;">Home</a>
+                <a href="{{ url_for('main.philosophy') }}" style="color: #94A3B8; margin: 0 10px; text-decoration: none;">Philosophy</a>
+                <a href="{{ url_for('dashboard.drills_hub') }}" style="color: #94A3B8; margin: 0 10px; text-decoration: none;">Training</a>
+            </div>
+            <p>&copy; 2026 MENTEE Inc. Strategy meets Psychology.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Training Arena{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 140px; padding-bottom: 5rem;">
+    
+    <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
+        <span style="color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:1px; font-size:0.8rem;">Cognitive Conditioning</span>
+        <h1 class="text-gradient" style="font-size: 3rem; margin-top: 0.5rem;">The Arena</h1>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 1rem auto;">
+            Select a module. Enter full-screen focus. Push your neural limits.
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+        
+        {% for id, drill in drills.items() %}
+        <div class="feature-card drill-card" style="border-top: 4px solid {{ drill.color }};">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 1.5rem;">
+                <div class="icon-box" style="background: {{ drill.color }}20; color: {{ drill.color }}; margin:0;">
+                    {{ drill.icon }}
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Personal Best</div>
+                    <div style="font-size:1.2rem; font-weight:700; color:white;">{{ stats[id] }}</div>
+                </div>
+            </div>
+            
+            <h3 style="margin-bottom: 0.5rem;">{{ drill.title }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; min-height: 3rem;">
+                {{ drill.desc }}
+            </p>
+
+            <a href="{{ url_for('dashboard.play_drill', drill_id=id) }}" class="btn btn-outline" style="width: 100%; margin-top: 1.5rem; border-color: {{ drill.color }}; color: {{ drill.color }};">
+                Initialize Drill
+            </a>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<style>
+    .drill-card { transition: transform 0.3s, box-shadow 0.3s; }
+    .drill-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .drill-card:hover .btn-outline { background: var(--bg-body); }
+</style>
+{% endblock %}

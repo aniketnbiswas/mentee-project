@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Our Philosophy{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 140px; padding-bottom: 5rem;">
+
+    <div style="max-width: 800px; margin: 0 auto 6rem auto; text-align: left; border-left: 2px solid var(--primary); padding-left: 2rem;">
+        <span style="color:var(--text-muted); font-weight:600; letter-spacing:2px; text-transform:uppercase; font-size:0.9rem; display:block; margin-bottom:1rem;">The Manifesto</span>
+        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 2rem;">
+            "We believe that <span class="text-gradient">choking under pressure</span> is not a character flaw. It is a lack of training."
+        </h1>
+        <p style="font-size: 1.2rem; line-height: 1.8; color: #cbd5e1;">
+            Athletes spend 95% of their time building their bodies. But in the final seconds of a championship, it is rarely the body that fails. It is the mind. Mentee exists to close the gap between your physical potential and your mental reality.
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 6rem;">
+        <div>
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">The Hidden Inefficiency</h2>
+            <p style="color: var(--text-muted); line-height: 1.7; margin-bottom: 1rem;">
+                For decades, sports psychology was a luxury service. It was reserved for Olympians and Premier League stars with massive budgets.
+            </p>
+            <p style="color: var(--text-muted); line-height: 1.7;">
+                This left 99% of determined athletes—students, amateurs, and semi-pros—without guidance. You were told to "toughen up" or "stay focused," but no one ever taught you <em>how</em>.
+            </p>
+        </div>
+        <div class="feature-card" style="padding: 3rem; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 4rem; font-weight: 700; color: var(--danger);">90%</div>
+            <p style="color: white; margin-top: 1rem;">of performance is mental.</p>
+            <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 2rem 0;"></div>
+            <div style="font-size: 4rem; font-weight: 700; color: var(--text-muted);">5%</div>
+            <p style="color: var(--text-muted); margin-top: 1rem;">of training time is spent on the mind.</p>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 6rem;">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">Why Join the Arena?</h2>
+        
+        <div style="display: grid; gap: 2rem;">
+            <div style="background: rgba(255,255,255,0.03); padding: 2rem; border-radius: 12px; display: flex; align-items: flex-start; gap: 1.5rem;">
+                <span style="font-size: 1.5rem; background: var(--primary); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; flex-shrink: 0;">1</span>
+                <div>
+                    <h3 style="margin: 0 0 0.5rem 0;">Active Training, Not Passive Reading</h3>
+                    <p style="color: var(--text-muted); margin: 0;">We don't just give you articles. We give you a Cognitive Gym. You will perform active drills that strain your focus and reaction time, forcing your brain to adapt.</p>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); padding: 2rem; border-radius: 12px; display: flex; align-items: flex-start; gap: 1.5rem;">
+                <span style="font-size: 1.5rem; background: var(--accent); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; flex-shrink: 0;">2</span>
+                <div>
+                    <h3 style="margin: 0 0 0.5rem 0;">Data-Driven Resilience</h3>
+                    <p style="color: var(--text-muted); margin: 0;">You track your bench press. Why not track your focus? Our Journaling system turns intangible feelings into concrete data you can improve.</p>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); padding: 2rem; border-radius: 12px; display: flex; align-items: flex-start; gap: 1.5rem;">
+                <span style="font-size: 1.5rem; background: var(--warning); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; flex-shrink: 0;">3</span>
+                <div>
+                    <h3 style="margin: 0 0 0.5rem 0;">Democratized Elite Tools</h3>
+                    <p style="color: var(--text-muted); margin: 0;">We use the same principles as NBA and F1 psychologists, but we package them into a simple, affordable web platform accessible to everyone.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+        <h2 style="margin-bottom: 1rem;">Stop leaving your mind to chance.</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Join the community of athletes who are engineering their own mental toughness.</p>
+        
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard.drills_hub') }}" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                Go to Gym &rarr;
+            </a>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">Welcome back, {{ current_user.name }}</p>
+        {% else %}
+            <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                Start Free Training &rarr;
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

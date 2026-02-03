@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Command Center{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: end; margin-bottom: 3rem;">
+        <div>
+            <h1 class="text-gradient">Ready to work, Athlete?</h1>
+            <p style="color: var(--text-muted);">Current Streak: <span style="color: var(--accent);">🔥 12 Days</span></p>
+        </div>
+        <a href="{{ url_for('dashboard.journal') }}" class="btn btn-outline">New Journal Entry</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        
+        <div class="feature-card" style="background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);">
+            <div class="icon-box">⚡</div>
+            <h3>Mental Gym</h3>
+            <p style="margin-bottom: 1.5rem;">Reaction drills, focus games, and concept videos.</p>
+            <a href="{{ url_for('dashboard.training') }}" class="btn btn-primary" style="font-size: 0.85rem;">Enter Gym</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon-box">🤖</div>
+            <h3>AI Audio Lab</h3>
+            <p style="margin-bottom: 1.5rem;">Generate audio for "Killer Instinct" or "Loss Recovery" based on your sport.</p>
+            <a href="{{ url_for('dashboard.ai_zone') }}" class="btn btn-primary" style="font-size: 0.85rem;">Open Lab</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon-box">🤝</div>
+            <h3>Mentor Connect</h3>
+            <p style="margin-bottom: 1.5rem;">Book 1:1 sessions with sports psychologists.</p>
+            <a href="{{ url_for('dashboard.mentors.html') }}" class="btn btn-outline" style="font-size: 0.85rem;">Find Mentor</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Find a Mentor{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mentors.css') }}">
+
+<div class="marketplace-container">
+
+    <header class="mentor-hero">
+        <div class="hero-content">
+            <span class="hero-tag">Elite Access</span>
+            <h1>Train Your Mind Like <br> <span class="text-gradient">You Train Your Body</span></h1>
+            <p>Work 1-on-1 with performance specialists trusted by serious competitors. <br> Accessible to everyone. Starting at <strong>$25/session</strong>.</p>
+            
+            <div class="hero-stats">
+                <div class="stat"><span class="icon">⚡</span> Next Available: <strong>Today</strong></div>
+                <div class="stat"><span class="icon">🛡️</span> Verified Experts</div>
+                <div class="stat"><span class="icon">💎</span> Athlete-Friendly Pricing</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="controls-bar sticky-bar">
+        
+        <div class="search-area">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="mentor-search" placeholder="Search by name, mental block, or sport..." onkeyup="Mentors.filter()">
+            </div>
+        </div>
+
+        <div class="filter-pills">
+            <button class="pill active" onclick="Mentors.setCategory('all', this)">All Experts</button>
+            <button class="pill" onclick="Mentors.setCategory('Pressure', this)">🔥 Pressure</button>
+            <button class="pill" onclick="Mentors.setCategory('Focus', this)">🎯 Focus</button>
+            <button class="pill" onclick="Mentors.setCategory('Recovery', this)">❤️‍🩹 Recovery</button>
+            <button class="pill" onclick="Mentors.setCategory('Confidence', this)">🚀 Confidence</button>
+            <button class="pill" onclick="Mentors.setCategory('Tournament Prep', this)">🏆 Tournament Prep</button>
+        </div>
+
+        <div class="view-toggles">
+            <button class="icon-btn active" onclick="Mentors.setView('grid')" title="Grid View">⊞</button>
+            <button class="icon-btn" onclick="Mentors.setView('list')" title="Detailed List">☰</button>
+        </div>
+    </div>
+
+    <div id="mentor-grid" class="mentor-grid view-grid">
+        {% for m in mentors %}
+        <div class="mentor-card {% if m.is_elite %}elite-card{% endif %}" 
+             data-name="{{ m.name|lower }}" 
+             data-tags="{{ m.specialties|join(',')|lower }}"
+             data-price="{{ m.price }}">
+            
+            {% if m.is_elite %}
+            <div class="elite-badge">💎 ELITE TIER</div>
+            {% endif %}
+
+            <div class="card-header">
+                <img src="{{ m.image }}" alt="{{ m.name }}" class="mentor-img">
+                <div class="mentor-meta">
+                    <div class="rating">⭐ {{ m.rating }} <span class="reviews">({{ m.reviews }})</span></div>
+                    <h3>{{ m.name }}</h3>
+                    <p class="mentor-title">{{ m.title }}</p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <p class="bio-preview">{{ m.bio }}</p>
+                <div class="tags">
+                    {% for tag in m.specialties %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="price-block">
+                    <span class="label">Session Price</span>
+                    <span class="price">${{ m.price }}</span>
+                </div>
+                <button class="btn btn-primary book-btn">
+                    Book Now
+                    <span class="sub-text">{{ m.next_slot }}</span>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="no-results" class="no-results" style="display: none; text-align: center; padding: 4rem;">
+        <h3 style="color:white;">No experts found</h3>
+        <p style="color:var(--text-muted);">Try adjusting your filters or search terms.</p>
+        <button class="btn btn-outline" onclick="Mentors.reset()" style="margin-top:1rem;">Clear All Filters</button>
+    </div>
+
+</div>
+
+<script>
+    // Pass Python data to JS for advanced client-side interactions if needed later
+    const ALL_MENTORS = {{ mentors|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/mentors.js') }}"></script>
+{% endblock %}

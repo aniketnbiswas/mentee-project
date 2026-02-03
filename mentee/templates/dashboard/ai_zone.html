@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}AI Audio Lab{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px;">
+    <h2 class="text-gradient" style="margin-bottom: 1rem;">AI Audio Generator</h2>
+    <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 600px;">
+        Select your sport and your current mental block. Our engine will generate a personalized visualization script for you.
+    </p>
+
+    <div class="feature-card" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; margin-bottom: 3rem;">
+        <div style="flex: 1; min-width: 200px;">
+            <label style="display: block; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">I AM A...</label>
+            <select class="btn btn-outline" style="width: 100%; justify-content: space-between;">
+                <option>Chess Player</option>
+                <option>Tennis Player</option>
+                <option>Swimmer</option>
+            </select>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <label style="display: block; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">I NEED TO...</label>
+            <select class="btn btn-outline" style="width: 100%; justify-content: space-between;">
+                <option>Build Killer Instinct</option>
+                <option>Overcome a Tough Loss</option>
+                <option>Increase Attention Span</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="showAudio()">Generate Session</button>
+    </div>
+
+    <div id="audio-result" class="feature-card" style="display: none; border-color: var(--accent);">
+        <h3 style="color: var(--accent);">Session Generated</h3>
+        <p style="margin-bottom: 1rem;">"Killer Instinct Visualization for Chess (5 min)"</p>
+        <audio controls style="width: 100%;">
+            <source src="#" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+            <strong>Script Preview:</strong> "Close your eyes. Visualize the board. You are not defending; you are hunting. Every move is a step toward their king..."
+        </div>
+    </div>
+</div>
+
+<script>
+    function showAudio() {
+        // In a real app, this would call your Python backend / OpenAI API
+        // For MVP, we simulate the "Generation"
+        const btn = document.querySelector('button');
+        btn.innerText = "Generating...";
+        setTimeout(() => {
+            document.getElementById('audio-result').style.display = 'block';
+            btn.innerText = "Generate Session";
+        }, 1500);
+    }
+</script>
+{% endblock %}

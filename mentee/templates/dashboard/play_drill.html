@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.title }} | MENTEE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/drills.css') }}">
+    <script>history.pushState(null, null, location.href); window.onpopstate = function () {history.go(1);};</script>
+</head>
+<body class="drill-mode">
+
+    <div class="drill-hud">
+        <div class="hud-left">
+            <a href="{{ url_for('dashboard.drills_hub') }}" class="btn-exit" onclick="return confirm('Exit session? Progress will be lost.')">✕ Exit</a>
+            <div class="hud-meta">
+                <span class="drill-name" style="color: {{ config.color }}">{{ config.title }}</span>
+                <span class="drill-level">Level <span id="hud-level">1</span></span>
+            </div>
+        </div>
+
+        <div class="hud-center">
+            <div id="hud-timer">00:00</div>
+        </div>
+
+        <div class="hud-right">
+            <div class="hud-stat">
+                <label>Score</label>
+                <div id="hud-score">0</div>
+            </div>
+            <div class="hud-stat mobile-hide">
+                <label>Best</label>
+                <div>{{ best_score }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-canvas" class="game-container">
+        </div>
+
+    <div id="overlay-start" class="game-overlay active">
+        <div class="overlay-content">
+            <div class="icon-pulse" style="color: {{ config.color }}">{{ config.icon }}</div>
+            <h1>{{ config.title }}</h1>
+            <p>{{ config.desc }}</p>
+            <button class="btn-start" onclick="DrillEngine.startSession('{{ drill_id }}')">Start Session</button>
+        </div>
+    </div>
+
+    <div id="overlay-results" class="game-overlay">
+        <div class="overlay-content">
+            <h2>Session Complete</h2>
+            <div class="result-grid">
+                <div class="result-item">
+                    <label>Final Score</label>
+                    <div class="big-num" id="res-score">0</div>
+                </div>
+                <div class="result-item">
+                    <label>Accuracy</label>
+                    <div class="big-num" id="res-acc">0%</div>
+                </div>
+                <div class="result-item">
+                    <label>Level</label>
+                    <div class="big-num" id="res-lvl">0</div>
+                </div>
+            </div>
+            <div class="result-actions">
+                <button class="btn-secondary" onclick="window.location.reload()">Replay</button>
+                <a href="{{ url_for('dashboard.drills_hub') }}" class="btn-primary">Finish</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DRILL_ID = "{{ drill_id }}";
+        const PRIMARY_COLOR = "{{ config.color }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/drill_engine.js') }}"></script>
+
+</body>
+</html>

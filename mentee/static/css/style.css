@@ -1,0 +1,429 @@
+/* mentee/static/css/style.css */
+
+/* --- 1. RESET & FONTS --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    /* --- PALETTE: Deep Focus Theme --- */
+    --bg-body: #0B1120;
+    --bg-card: #151F32;
+    --bg-glass: rgba(11, 17, 32, 0.95);
+    --text-main: #F0F9FF;
+    --text-muted: #94A3B8;
+    --primary: #06B6D4;
+    --secondary: #3B82F6;
+    --gradient-main: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
+    --accent: #10B981;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-pill: 50px;
+    --container-width: 1200px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: white;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+a { text-decoration: none; transition: 0.3s; color: inherit; }
+
+/* --- 2. LAYOUT UTILITIES --- */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.text-gradient {
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+/* --- 3. NAVBAR --- */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    height: 100px; /* Fixed Height */
+    display: flex;
+    align-items: center;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%; /* Important: Container fills bar */
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo-img {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+/* --- 4. DROPDOWN (BULLETPROOF FIX) --- */
+.nav-links { 
+    display: flex; 
+    gap: 2.5rem; 
+    align-items: center; 
+    height: 100%; /* Links container fills full navbar height */
+}
+
+.nav-links a { color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+.nav-links a:hover { color: white; }
+
+.dropdown {
+    position: relative;
+    height: 100%;           /* Fills full navbar height (100px) */
+    display: flex;
+    align-items: center;    /* Centers text vertically */
+}
+
+.dropbtn {
+    color: var(--text-muted);
+    font-weight: 500;
+    cursor: pointer;
+    height: 100%;           /* Button fills full height */
+    display: flex;
+    align-items: center;    /* Centers text inside button */
+    padding: 0 10px;        /* Adds hit area width */
+}
+
+.dropdown:hover .dropbtn { color: white; }
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--bg-card);
+    min-width: 220px;
+    box-shadow: 0px 8px 24px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-md);
+    z-index: 1001;
+
+    /* POSITIONING FIX */
+    top: 90%; /* Starts overlapping the navbar slightly */
+    left: 0;
+    padding-top: 10px; /* Internal spacing */
+}
+
+/* THE INVISIBLE BRIDGE: This connects the navbar to the menu */
+.dropdown-content::before {
+    content: "";
+    position: absolute;
+    top: -20px;  /* Extends 20px UP towards the navbar */
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: transparent; /* Invisible */
+}
+
+.dropdown-content a {
+    color: var(--text-muted);
+    padding: 14px 20px;
+    display: block;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+    font-size: 0.9rem;
+    line-height: normal;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(6, 182, 212, 0.1);
+    color: white;
+}
+
+.dropdown:hover .dropdown-content { display: block; }
+
+/* --- 5. BUTTONS --- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.8rem 2rem; border-radius: var(--radius-pill);
+    font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary {
+    background: var(--gradient-main);
+    color: white;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5); }
+.btn-outline {
+    background: transparent; border: 1px solid rgba(255,255,255,0.15); color: white;
+}
+.btn-outline:hover { border-color: var(--primary); background: rgba(6, 182, 212, 0.1); }
+
+/* --- 6. HERO & SECTIONS --- */
+.hero {
+    padding: 260px 0 100px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15) 0%, rgba(11, 17, 32, 0) 60%);
+    min-height: 80vh;
+}
+.hero h1 { font-size: 4.5rem; margin-bottom: 1.5rem; margin-top: 0; }
+.hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2.5rem; }
+
+/* --- 7. CARDS & GAMES --- */
+.feature-card {
+    background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg);
+    border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s;
+    position: relative; overflow: hidden;
+}
+.feature-card:hover { transform: translateY(-5px); border-color: rgba(6, 182, 212, 0.3); }
+
+.icon-box {
+    width: 50px; height: 50px; background: rgba(6, 182, 212, 0.1); color: var(--primary);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 1.5rem;
+}
+.icon-box-small {
+    width: 40px; height: 40px; background: rgba(6, 182, 212, 0.1); color: var(--primary);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+
+/* GAME UI */
+.game-header { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+.game-area {
+    background: #0F172A; height: 220px; border-radius: var(--radius-md);
+    position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,0.05); cursor: pointer; user-select: none;
+}
+.game-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(11, 17, 32, 0.85); display: flex; align-items: center; justify-content: center;
+    font-weight: 600; letter-spacing: 1px; color: white; z-index: 10;
+}
+.game-metrics {
+    display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-muted);
+}
+.status-indicator {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--accent); background: rgba(16, 185, 129, 0.1);
+    padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px;
+}
+
+/* GAME SPECIFICS */
+.pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 30px; width: 100%; height: 100%; }
+.pattern-block { background: rgba(255,255,255,0.05); border-radius: 8px; transition: 0.1s; }
+.pattern-block.active { background: var(--primary); box-shadow: 0 0 20px var(--primary); }
+
+.focus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; height: 100%; padding: 20px; }
+.focus-cell { 
+    background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; font-weight: 700; font-size: 1.2rem; transition: 0.1s; 
+}
+.focus-cell:active { background: var(--primary); }
+
+/* --- 8. FOOTER --- */
+footer {
+    border-top: 1px solid rgba(255,255,255,0.05); padding: 4rem 0; margin-top: 6rem;
+    text-align: center; color: var(--text-muted);
+}
+/* --- 8. JOURNAL PAGE STYLES --- */
+.journal-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.btn-icon { background: none; border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display:flex; align-items:center; justify-content:center; }
+.btn-icon:hover { color: white; border-color: var(--primary); }
+
+.calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+
+.day-cell { 
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center; 
+    border-radius: 50%; cursor: pointer; font-size: 0.9rem; transition: 0.2s; position: relative; color: var(--text-muted);
+}
+.day-cell:hover { background: rgba(255,255,255,0.05); color: white; }
+.day-cell.today { border: 1px solid var(--primary); color: var(--primary); font-weight: bold; }
+.day-cell.selected { background: var(--primary); color: white; }
+.day-cell.has-entry::after {
+    content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; 
+    background: var(--accent); border-radius: 50%;
+}
+
+.editor-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.form-group { margin-bottom: 1.5rem; }
+textarea { height: 80px; resize: vertical; }
+
+@media (max-width: 900px) {
+    .journal-layout { grid-template-columns: 1fr; }
+}
+/* --- 9. ZEN JOURNAL REDESIGN --- */
+
+/* The Main Layout */
+.journal-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+/* The Cards (Glassmorphism) */
+.feature-card.journal-panel {
+    background: rgba(21, 31, 50, 0.6); /* More transparent */
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem;
+}
+
+/* --- CALENDAR STYLING --- */
+.calendar-header {
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 1.5rem; padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.calendar-header h3 { font-size: 1.1rem; margin: 0; letter-spacing: 0.5px; }
+
+.btn-icon {
+    background: rgba(255,255,255,0.05); border: none; color: var(--text-muted);
+    border-radius: 50%; width: 32px; height: 32px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: 0.2s;
+}
+.btn-icon:hover { background: var(--primary); color: white; transform: scale(1.1); }
+
+.calendar-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
+    font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 1rem; font-weight: 600;
+}
+
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+
+.day-cell {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+    position: relative; color: var(--text-muted); background: rgba(255,255,255,0.02);
+}
+
+.day-cell:hover { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
+.day-cell.today { border: 1px solid var(--primary); color: var(--primary); font-weight: 700; }
+.day-cell.selected { background: var(--gradient-main); color: white; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4); }
+
+/* The "Has Entry" Dot */
+.day-cell.has-entry::after {
+    content: ''; position: absolute; bottom: 6px; width: 4px; height: 4px;
+    background: var(--warning); border-radius: 50%; box-shadow: 0 0 5px var(--warning);
+}
+
+/* --- EDITOR STYLING (The Big Fix) --- */
+.editor-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    background: rgba(0,0,0,0.2); /* Darker inner background */
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.03);
+    transition: 0.3s;
+}
+
+.form-section:focus-within {
+    border-color: rgba(6, 182, 212, 0.3);
+    background: rgba(0,0,0,0.3);
+}
+
+.form-label {
+    display: block; color: var(--text-muted); font-size: 0.8rem;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+/* PRETTY INPUTS */
+.zen-input {
+    width: 100%;
+    background: transparent; /* Seamless feel */
+    border: none;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    min-height: 40px;
+}
+
+.zen-input::placeholder { color: rgba(255,255,255,0.2); font-style: italic; }
+
+/* CUSTOM SLIDER */
+.range-container {
+    display: flex; align-items: center; gap: 1.5rem;
+    padding: 0.5rem 0;
+}
+
+input[type=range] {
+    -webkit-appearance: none; width: 100%; background: transparent;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%; height: 6px; cursor: pointer;
+    background: rgba(255,255,255,0.1); border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    height: 20px; width: 20px; border-radius: 50%;
+    background: var(--primary); cursor: pointer;
+    -webkit-appearance: none; margin-top: -7px;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    transition: transform 0.2s;
+}
+
+input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
+
+#rating-display {
+    font-size: 1.5rem; font-weight: 700; color: var(--primary);
+    min-width: 40px; text-align: center;
+}
+
+/* SAVE STATUS ANIMATION */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.status-pill {
+    font-size: 0.8rem; padding: 4px 12px; border-radius: 20px;
+    background: rgba(255,255,255,0.05); color: var(--text-muted);
+    animation: fadeIn 0.3s ease;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .journal-layout { grid-template-columns: 1fr; }
+    .calendar-panel { order: -1; } /* Calendar on top on mobile */
+}

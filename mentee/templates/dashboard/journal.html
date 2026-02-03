@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Performance Journal{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/journal.css') }}">
+
+<div class="journal-stage">
+    
+    <div class="console-card">
+        
+        <div class="console-header">
+            <div class="header-left">
+                <h2 id="monthTitle">Loading...</h2>
+                <div class="streak-tag">
+                    <span class="pulse-icon"></span> 
+                    <span id="streakCount">0</span> Day Streak
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <button id="btnPrev" class="control-btn" title="Previous">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button id="btnToday" class="control-btn text">Today</button>
+                <button id="btnNext" class="control-btn" title="Next">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="calendar-wrapper">
+            <div class="week-row">
+                <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+            </div>
+            <div id="calendarGrid" class="days-grid">
+                </div>
+        </div>
+
+    </div>
+
+    <div class="entry-panel" id="entryPanel">
+        <div class="panel-head">
+            <div class="date-group">
+                <span id="panelDay" class="big-day">--</span>
+                <div class="meta-date">
+                    <span id="panelMonth">---</span>
+                    <span id="panelYear">----</span>
+                </div>
+            </div>
+            <button class="close-icon" onclick="Journal.close()">×</button>
+        </div>
+
+        <div class="panel-body">
+            <div class="section">
+                <label>Energy State</label>
+                <div class="mood-dock">
+                    <button class="mood-btn" data-val="fire" title="Peak">🔥</button>
+                    <button class="mood-btn" data-val="happy" title="Good">😀</button>
+                    <button class="mood-btn" data-val="calm" title="Calm">🌊</button>
+                    <button class="mood-btn" data-val="neutral" title="Okay">😐</button>
+                    <button class="mood-btn" data-val="stressed" title="Tough">😤</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <label>The Micro Win</label>
+                <input type="text" id="inWin" class="glass-input" placeholder="One small victory today...">
+            </div>
+
+            <div class="section">
+                <div class="row-label">
+                    <label>Reflection</label>
+                    <div class="dump-toggle">
+                        <input type="checkbox" id="checkDump"> <small>Brain Dump</small>
+                    </div>
+                </div>
+                <textarea id="inReflect" class="glass-textarea" placeholder="Clear your mind..."></textarea>
+            </div>
+
+            <div class="section">
+                <label>Performance (1-10)</label>
+                <div class="slider-wrap">
+                    <input type="range" id="inScore" min="1" max="10" step="1" value="5">
+                    <span id="scoreDisplay">5</span>
+                </div>
+            </div>
+
+            <button class="save-hero-btn" onclick="Journal.save()">
+                <span>COMMIT ENTRY</span>
+            </button>
+            <div id="saveMsg">Saved</div>
+        </div>
+    </div>
+
+    <div class="panel-overlay" onclick="Journal.close()"></div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/journal.js') }}"></script>
+{% endblock %}

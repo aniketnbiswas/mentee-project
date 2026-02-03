@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}AI Counselling{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 140px;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 class="text-gradient">AI Performance Counsellor</h1>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+            Tell us about your sport and your current mental block. Our AI will generate a personalized visualization script to help you reset.
+        </p>
+    </div>
+
+    <div class="feature-card" style="max-width: 800px; margin: 0 auto;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            <div style="flex: 1; min-width: 250px;">
+                <label>My Sport</label>
+                <select class="btn btn-outline" style="width: 100%; justify-content: space-between; text-align: left;">
+                    <option>Tennis / Racket Sports</option>
+                    <option>Football / Soccer</option>
+                    <option>Basketball</option>
+                    <option>Swimming / Track</option>
+                    <option>Combat Sports (Boxing/MMA)</option>
+                    <option>Golf</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div style="flex: 1; min-width: 250px;">
+                <label>Current Challenge</label>
+                <select class="btn btn-outline" style="width: 100%; justify-content: space-between; text-align: left;">
+                    <option>Pre-Game Nerves / Anxiety</option>
+                    <option>Lost Confidence / Slump</option>
+                    <option>Lack of Aggression</option>
+                    <option>Recovering from Injury</option>
+                    <option>Choking in Clutch Moments</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="generateSession()" style="width: 100%; font-size: 1.1rem;">Generate Audio Session</button>
+    </div>
+
+    <div id="ai-output" class="feature-card" style="max-width: 800px; margin: 2rem auto; display: none; border-color: var(--accent);">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="icon-box" style="margin: 0; background: rgba(16, 185, 129, 0.1); color: var(--accent);">🧬</div>
+            <div>
+                <h3 style="margin: 0;">Session Generated</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Based on cognitive behavioral therapy for athletes.</p>
+            </div>
+        </div>
+
+        <p style="margin-bottom: 1.5rem; font-style: italic; color: #E2E8F0; line-height: 1.8;">
+            "Close your eyes. You are standing in the arena. The crowd noise fades away. You feel the ground beneath your feet. You are not nervous; you are ready. The energy you feel is fuel. Breathe in for 4 seconds... visualize your perfect form... execute."
+        </p>
+
+        <audio controls style="width: 100%;">
+            <source src="#" type="audio/mpeg">
+            Your browser does not support audio.
+        </audio>
+    </div>
+</div>
+
+<script>
+    function generateSession() {
+        const btn = document.querySelector('button');
+        const originalText = btn.innerText;
+        btn.innerText = "Analyzing Psychology...";
+        btn.style.opacity = "0.7";
+        
+        setTimeout(() => {
+            document.getElementById('ai-output').style.display = 'block';
+            btn.innerText = originalText;
+            btn.style.opacity = "1";
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }, 2000);
+    }
+</script>
+{% endblock %}
