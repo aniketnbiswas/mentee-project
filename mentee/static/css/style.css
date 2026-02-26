@@ -395,3 +395,42 @@ footer { border-top: 1px solid var(--border-glass); padding: 4rem 0; margin-top:
     box-shadow: 0 4px 15px rgba(0, 85, 255, 0.1) !important;
     border: 1px solid rgba(15, 23, 42, 0.08) !important;
 }
+/* ==========================================================================
+   ULTIMATE LIGHT MODE TEXT FIX (For Homepage Stats & Cards)
+   ========================================================================== */
+
+/* 1. Catch ALL elements that have inline white/light colors and force them dark */
+[data-theme="light"] *[style*="color: white"],
+[data-theme="light"] *[style*="color: #FFF"],
+[data-theme="light"] *[style*="color:#FFF"],
+[data-theme="light"] *[style*="color: #ffffff"],
+[data-theme="light"] *[style*="color: #F8FAFC"],
+[data-theme="light"] *[style*="color: #F0F9FF"] {
+    color: var(--text-main) !important;
+}
+
+/* 2. Brute-force the cards and stats to use Dark Slate */
+[data-theme="light"] .feature-card div,
+[data-theme="light"] .feature-card span,
+[data-theme="light"] .feature-card strong,
+[data-theme="light"] .stat-number,
+[data-theme="light"] .stat-box {
+    color: var(--text-main) !important;
+}
+
+/* 3. Make the subtext inside cards a readable Slate Gray */
+[data-theme="light"] .feature-card p {
+    color: var(--text-muted) !important;
+}
+
+/* 4. Keep links inside cards vibrant blue */
+[data-theme="light"] .feature-card a {
+    color: var(--primary) !important;
+    font-weight: 700 !important;
+}
+
+/* 5. Protect the Primary Buttons so their text stays white */
+[data-theme="light"] .btn-primary, 
+[data-theme="light"] .btn-primary * {
+    color: #FFFFFF !important;
+}
