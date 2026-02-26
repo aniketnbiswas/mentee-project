@@ -1,77 +1,714 @@
 {% extends "base.html" %}
-{% block title %}AI Counselling{% endblock %}
+{% block title %}AI Performance Counsellor{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 140px;">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 class="text-gradient">AI Performance Counsellor</h1>
-        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
-            Tell us about your sport and your current mental block. Our AI will generate a personalized visualization script to help you reset.
-        </p>
+<style>
+    /* Scoped Variables to avoid base.html conflicts */
+    .ai-app-wrapper {
+        --bg-base: #050914;
+        --bg-panel: rgba(11, 17, 32, 0.65);
+        --accent-main: #00F0FF;
+        --accent-glow: rgba(0, 240, 255, 0.3);
+        --text-primary: #FFFFFF;
+        --text-secondary: #94A3B8;
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        
+        position: relative;
+        min-height: 100vh;
+        width: 100%;
+        background-color: var(--bg-base);
+        color: var(--text-primary);
+        font-family: var(--font-stack);
+        padding-top: 100px; /* Accounts for base.html navbar */
+        padding-bottom: 60px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+/* Inherit global theme variables if Light mode is active */
+    [data-theme="light"] .ai-app-wrapper {
+        --bg-base: #F4F7FB;
+        --bg-panel: rgba(255, 255, 255, 0.8);
+        --accent-main: #0284C7;
+        --accent-glow: rgba(14, 165, 233, 0.25);
+        --text-primary: #0F172A;
+        --text-secondary: #64748B;
+        --border-glass: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="light"] .ai-chat-header,
+    [data-theme="light"] .ai-chat-input-area,
+    [data-theme="light"] .ai-script-box {
+        background: rgba(255, 255, 255, 0.5); /* Lighter chat areas */
+    }
+
+    [data-theme="light"] .ai-btn-primary {
+        color: #FFF; /* Make text white on the vibrant blue button */
+    }
+    /* Ambient Background & Particles */
+    #ai-bg-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .ai-ambient-glow {
+        position: absolute;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.15;
+        z-index: 0;
+        pointer-events: none;
+        animation: ai-breathe 8s infinite alternate ease-in-out;
+    }
+
+    @keyframes ai-breathe {
+        0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.1; }
+        100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.2; }
+    }
+
+    /* Controls Header (Sub-navbar) */
+    .ai-controls-bar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 40px 20px;
+        gap: 16px;
+    }
+
+    .ai-btn-glass {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-glass);
+        color: var(--text-secondary);
+        padding: 8px 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: var(--transition-smooth);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ai-btn-glass:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+        border-color: var(--accent-main);
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .ai-toggle-switch {
+        display: flex;
+        background: rgba(0,0,0,0.4);
+        border-radius: 30px;
+        padding: 4px;
+        border: 1px solid var(--border-glass);
+    }
+
+    .ai-toggle-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: var(--transition-smooth);
+    }
+
+    .ai-toggle-btn.active {
+        background: var(--accent-main);
+        color: #000;
+        font-weight: bold;
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* Main Content Area */
+    .ai-main-content {
+        position: relative;
+        z-index: 10;
+        flex: 1;
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* View Management */
+    .ai-view-section {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateY(20px);
+        padding: 20px;
+        height: 100%;
+    }
+
+    .ai-view-section.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    /* Hero Section */
+    .ai-hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 16px;
+        background: linear-gradient(180deg, #FFFFFF 0%, #A0AABF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+    }
+
+    .ai-hero-subtitle {
+        font-size: 1.15rem;
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 50px;
+        max-width: 600px;
+        line-height: 1.6;
+    }
+
+    .ai-path-cards {
+        display: flex;
+        gap: 32px;
+        width: 100%;
+        max-width: 1000px;
+    }
+
+    .ai-path-card {
+        flex: 1;
+        background: var(--bg-panel);
+        border: 1px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 40px 32px;
+        cursor: pointer;
+        backdrop-filter: blur(20px);
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ai-path-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+        pointer-events: none;
+    }
+
+    .ai-path-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; width: 100%; height: 4px;
+        background: var(--accent-main);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+
+    .ai-path-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(255,255,255,0.2);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px var(--accent-glow);
+    }
+
+    .ai-path-card:hover::after {
+        transform: scaleX(1);
+    }
+
+    .ai-path-icon { font-size: 3rem; margin-bottom: 20px; display: inline-block; }
+    .ai-path-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 12px; }
+    .ai-path-desc { color: var(--text-secondary); font-size: 1rem; line-height: 1.6; }
+
+    /* Glass Container */
+    .ai-glass-container {
+        background: var(--bg-panel);
+        border: 1px solid var(--border-glass);
+        border-radius: 24px;
+        backdrop-filter: blur(24px);
+        width: 100%;
+        max-width: 1000px;
+        height: 80vh;
+        max-height: 750px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+
+    /* Config Layout */
+    .ai-setup-header { padding: 24px 32px; border-bottom: 1px solid var(--border-glass); }
+    .ai-setup-header h2 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+    
+    .ai-setup-body { padding: 32px; overflow-y: auto; flex: 1; }
+    .ai-setup-group { margin-bottom: 32px; }
+    .ai-setup-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 600; }
+    
+    .ai-grid-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    
+    .ai-opt-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border-glass);
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        text-align: center;
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+    .ai-opt-card:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .ai-opt-card.selected {
+        background: rgba(var(--accent-rgb, 0, 240, 255), 0.1);
+        border-color: var(--accent-main);
+        color: var(--accent-main);
+        box-shadow: inset 0 0 20px var(--accent-glow);
+    }
+
+    .ai-action-footer { padding: 20px 32px; border-top: 1px solid var(--border-glass); display: flex; justify-content: flex-end; background: rgba(0,0,0,0.2); align-items: center; }
+
+    .ai-btn-primary {
+        background: var(--accent-main);
+        color: #000;
+        border: none;
+        padding: 14px 28px;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .ai-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px var(--accent-glow), 0 0 10px #fff; }
+
+    /* Chat Interface */
+    .ai-chat-header { display: flex; align-items: center; padding: 16px 24px; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border-glass); gap: 16px; }
+    .ai-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-main), #000); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 0 15px var(--accent-glow); border: 2px solid rgba(255,255,255,0.1); }
+    .ai-chat-info h3 { font-size: 1.1rem; margin: 0 0 4px 0; }
+    .ai-chat-info p { font-size: 0.8rem; color: var(--accent-main); display: flex; align-items: center; gap: 6px; margin: 0; }
+    .ai-status-dot { width: 8px; height: 8px; background: var(--accent-main); border-radius: 50%; animation: ai-pulse-dot 2s infinite; }
+
+    @keyframes ai-pulse-dot { 0% { box-shadow: 0 0 0 0 var(--accent-glow); } 70% { box-shadow: 0 0 0 6px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+    .ai-chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
+    
+    .ai-message { max-width: 75%; padding: 16px 20px; border-radius: 18px; font-size: 1rem; line-height: 1.5; opacity: 0; animation: ai-fade-up 0.4s ease forwards; }
+    @keyframes ai-fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .ai-msg-ai { align-self: flex-start; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); border-bottom-left-radius: 4px; color: var(--text-primary); }
+    .ai-msg-user { align-self: flex-end; background: linear-gradient(135deg, rgba(var(--accent-rgb, 0, 240, 255), 0.2), rgba(255,255,255,0.05)); border: 1px solid var(--accent-main); border-bottom-right-radius: 4px; color: var(--text-primary); }
+
+    .ai-typing { align-self: flex-start; background: rgba(255, 255, 255, 0.03); padding: 16px 24px; border-radius: 20px; border-bottom-left-radius: 4px; display: none; gap: 6px; align-items: center; }
+    .ai-typing span { width: 6px; height: 6px; background: var(--text-secondary); border-radius: 50%; animation: ai-type-dot 1.4s infinite both; }
+    .ai-typing span:nth-child(1) { animation-delay: -0.32s; }
+    .ai-typing span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes ai-type-dot { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+
+    .ai-chat-input-area { padding: 20px 24px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--border-glass); display: flex; gap: 12px; }
+    .ai-chat-input { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); padding: 14px 20px; border-radius: 12px; color: var(--text-primary); font-size: 1rem; outline: none; transition: var(--transition-smooth); }
+    .ai-chat-input:focus { border-color: var(--accent-main); background: rgba(0, 0, 0, 0.2); }
+    .ai-btn-send { background: var(--accent-main); border: none; width: 50px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition-smooth); }
+    .ai-btn-send:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--accent-glow); }
+    .ai-btn-send svg { fill: #000; width: 20px; height: 20px; }
+
+    /* Trance Generator */
+    .ai-safety-card { background: rgba(255, 60, 60, 0.05); border: 1px solid rgba(255, 60, 60, 0.2); padding: 40px; border-radius: 24px; text-align: center; max-width: 500px; backdrop-filter: blur(10px); }
+    .ai-safety-card h2 { color: #ff5555; margin-bottom: 20px; font-size: 1.8rem; }
+    .ai-safety-list { text-align: left; margin-bottom: 24px; color: var(--text-secondary); line-height: 1.8; font-size: 1rem; list-style-type: none; padding: 0; }
+    .ai-safety-list li::before { content: '⚠️'; margin-right: 12px; }
+
+    .ai-brain-pulse { width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); border: 2px solid var(--accent-main); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 24px; animation: ai-throb 1.5s infinite alternate; box-shadow: 0 0 40px var(--accent-glow); }
+    @keyframes ai-throb { 0% { transform: scale(0.95); box-shadow: 0 0 20px var(--accent-glow); } 100% { transform: scale(1.1); box-shadow: 0 0 60px var(--accent-main); } }
+
+    .ai-player-ui { width: 100%; max-width: 700px; background: var(--bg-panel); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px; text-align: center; position: relative; overflow: hidden; }
+    .ai-player-ui::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, var(--accent-glow), transparent 30%); animation: ai-rotate-bg 10s linear infinite; z-index: 0; opacity: 0.3; pointer-events: none; }
+    @keyframes ai-rotate-bg { 100% { transform: rotate(360deg); } }
+
+    .ai-session-title { font-size: 1.8rem; margin-bottom: 8px; font-weight: 700; position: relative; z-index: 1; }
+    .ai-session-meta { color: var(--accent-main); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; font-size: 0.85rem; position: relative; z-index: 1; }
+
+    .ai-visualizer { display: flex; align-items: center; justify-content: center; gap: 4px; height: 60px; margin-bottom: 32px; position: relative; z-index: 1; }
+    .ai-bar { width: 5px; background: var(--text-secondary); border-radius: 3px; height: 8px; transition: height 0.2s ease, background 0.3s; }
+    .ai-bar.active-vis { background: var(--accent-main); box-shadow: 0 0 10px var(--accent-main); animation: ai-sound-wave 1.2s infinite ease-in-out alternate; }
+    @keyframes ai-sound-wave { 0% { height: 8px; } 100% { height: 50px; } }
+
+    .ai-progress-wrap { position: relative; z-index: 1; width: 100%; }
+    .ai-progress-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 12px; position: relative; }
+    .ai-progress-fill { height: 100%; background: var(--accent-main); width: 0%; border-radius: 3px; box-shadow: 0 0 10px var(--accent-main); transition: width 0.1s linear; }
+    .ai-time-indicators { display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 24px; }
+
+    .ai-play-btn { position: relative; z-index: 1; width: 70px; height: 70px; border-radius: 50%; background: var(--text-primary); border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: var(--transition-smooth); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .ai-play-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(255,255,255,0.4); }
+    .ai-play-btn svg { width: 28px; height: 28px; fill: #000; margin-left: 4px; }
+    .ai-play-btn.playing svg { margin-left: 0; }
+
+    .ai-script-box { position: relative; z-index: 1; margin-top: 32px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; border-left: 3px solid var(--accent-main); text-align: left; font-style: italic; color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem; min-height: 80px; }
+</style>
+
+<div class="ai-app-wrapper">
+    <canvas id="ai-bg-canvas"></canvas>
+    <div class="ai-ambient-glow"></div>
+
+    <div class="ai-controls-bar">
+        <div class="ai-toggle-switch">
+            <button class="ai-toggle-btn active" onclick="menteeAI.setGender('male', this)">Male</button>
+            <button class="ai-toggle-btn" onclick="menteeAI.setGender('female', this)">Female</button>
+        </div>
+        <button class="ai-btn-glass" onclick="menteeAI.toggleSound()" id="ai-sound-toggle">🔊 Ambient On</button>
     </div>
 
-    <div class="feature-card" style="max-width: 800px; margin: 0 auto;">
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-            <div style="flex: 1; min-width: 250px;">
-                <label>My Sport</label>
-                <select class="btn btn-outline" style="width: 100%; justify-content: space-between; text-align: left;">
-                    <option>Tennis / Racket Sports</option>
-                    <option>Football / Soccer</option>
-                    <option>Basketball</option>
-                    <option>Swimming / Track</option>
-                    <option>Combat Sports (Boxing/MMA)</option>
-                    <option>Golf</option>
-                    <option>Other</option>
-                </select>
-            </div>
-            <div style="flex: 1; min-width: 250px;">
-                <label>Current Challenge</label>
-                <select class="btn btn-outline" style="width: 100%; justify-content: space-between; text-align: left;">
-                    <option>Pre-Game Nerves / Anxiety</option>
-                    <option>Lost Confidence / Slump</option>
-                    <option>Lack of Aggression</option>
-                    <option>Recovering from Injury</option>
-                    <option>Choking in Clutch Moments</option>
-                </select>
+    <div class="ai-main-content">
+        
+        <div id="ai-view-hero" class="ai-view-section active">
+            <h1 class="ai-hero-title">AI Performance Counsellor</h1>
+            <p class="ai-hero-subtitle">Elite psychology meets artificial intelligence. Calibrate your mindset, reframe pressure, and unlock your ultimate mental edge.</p>
+            
+            <div class="ai-path-cards">
+                <div class="ai-path-card" onclick="menteeAI.switchView('ai-view-chat-setup')">
+                    <span class="ai-path-icon">💬</span>
+                    <h2 class="ai-path-title">Interactive Counselor</h2>
+                    <p class="ai-path-desc">Engage in a dynamic conversational session. Vent frustrations, conquer anxiety, and rebuild tactical confidence with a tailored AI persona.</p>
+                </div>
+                <div class="ai-path-card" onclick="menteeAI.switchView('ai-view-trance-safety')">
+                    <span class="ai-path-icon">🌀</span>
+                    <h2 class="ai-path-title">Performance Trance</h2>
+                    <p class="ai-path-desc">Generate a bespoke, immersive audio hypnosis track. Designed to hardwire focus, manifest championships, and accelerate recovery.</p>
+                </div>
             </div>
         </div>
 
-        <button class="btn btn-primary" onclick="generateSession()" style="width: 100%; font-size: 1.1rem;">Generate Audio Session</button>
-    </div>
-
-    <div id="ai-output" class="feature-card" style="max-width: 800px; margin: 2rem auto; display: none; border-color: var(--accent);">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-            <div class="icon-box" style="margin: 0; background: rgba(16, 185, 129, 0.1); color: var(--accent);">🧬</div>
-            <div>
-                <h3 style="margin: 0;">Session Generated</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Based on cognitive behavioral therapy for athletes.</p>
+        <div id="ai-view-chat-setup" class="ai-view-section">
+            <div class="ai-glass-container">
+                <div class="ai-setup-header"><h2>Configure Counselor Protocol</h2></div>
+                <div class="ai-setup-body">
+                    <div class="ai-setup-group">
+                        <div class="ai-setup-label">Select AI Persona</div>
+                        <div class="ai-grid-options" id="opt-chat-persona">
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','persona',this,'Veteran Coach')">Veteran Coach</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','persona',this,'Sports Psychologist')">Sports Psychologist</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','persona',this,'High-Perf Mentor')">High-Perf Mentor</div>
+                        </div>
+                    </div>
+                    <div class="ai-setup-group">
+                        <div class="ai-setup-label">Counselor Tone</div>
+                        <div class="ai-grid-options" id="opt-chat-tone">
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','tone',this,'Calm & Grounded')">Calm & Grounded</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','tone',this,'Energetic & Motivational')">Energetic</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','tone',this,'Strict & Driven')">Strict & Driven</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','tone',this,'Compassionate')">Compassionate</div>
+                        </div>
+                    </div>
+                    <div class="ai-setup-group">
+                        <div class="ai-setup-label">Session Goal</div>
+                        <div class="ai-grid-options" id="opt-chat-goal">
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','goal',this,'Calm Nerves')">Calm Pre-Game Nerves</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','goal',this,'Recover Loss')">Recover from Loss</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','goal',this,'Build Confidence')">Build Confidence</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('chat','goal',this,'Sharpen Focus')">Focus Sharpening</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-action-footer">
+                    <button class="ai-btn-glass" style="margin-right:auto; border:none;" onclick="menteeAI.switchView('ai-view-hero')">← Back</button>
+                    <button class="ai-btn-primary" onclick="menteeAI.startChat()">Initialize Session</button>
+                </div>
             </div>
         </div>
 
-        <p style="margin-bottom: 1.5rem; font-style: italic; color: #E2E8F0; line-height: 1.8;">
-            "Close your eyes. You are standing in the arena. The crowd noise fades away. You feel the ground beneath your feet. You are not nervous; you are ready. The energy you feel is fuel. Breathe in for 4 seconds... visualize your perfect form... execute."
-        </p>
+        <div id="ai-view-chat-active" class="ai-view-section">
+            <div class="ai-glass-container">
+                <div class="ai-chat-header">
+                    <div class="ai-avatar">🧠</div>
+                    <div class="ai-chat-info">
+                        <h3 id="ai-chat-title">AI Counselor</h3>
+                        <p><span class="ai-status-dot"></span> Secure encrypted session</p>
+                    </div>
+                    <button class="ai-btn-glass" style="margin-left:auto; border-color:rgba(255,60,60,0.5); color:#ff6b6b;" onclick="menteeAI.endSession()">End Protocol</button>
+                </div>
+                <div class="ai-chat-messages" id="ai-chat-box"></div>
+                <div class="ai-typing" id="ai-typing-ind"><span></span><span></span><span></span></div>
+                <div class="ai-chat-input-area">
+                    <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Express your state..." onkeypress="if(event.key==='Enter')menteeAI.sendMsg()">
+                    <button class="ai-btn-send" onclick="menteeAI.sendMsg()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+                </div>
+            </div>
+        </div>
 
-        <audio controls style="width: 100%;">
-            <source src="#" type="audio/mpeg">
-            Your browser does not support audio.
-        </audio>
+        <div id="ai-view-trance-safety" class="ai-view-section">
+            <div class="ai-safety-card">
+                <h2>Neural Trance Protocol</h2>
+                <ul class="ai-safety-list">
+                    <li>Wear high-quality headphones.</li>
+                    <li>Sit or lie down comfortably.</li>
+                    <li>Close your eyes during playback.</li>
+                    <li><strong>Do not operate vehicles.</strong></li>
+                </ul>
+                <button class="ai-btn-primary" style="width:100%; margin-bottom:12px;" onclick="menteeAI.switchView('ai-view-trance-setup')">I Understand, Proceed</button>
+                <button class="ai-btn-glass" style="width:100%; justify-content:center; border:none;" onclick="menteeAI.switchView('ai-view-hero')">Cancel</button>
+            </div>
+        </div>
+
+        <div id="ai-view-trance-setup" class="ai-view-section">
+            <div class="ai-glass-container" style="max-height: 700px;">
+                <div class="ai-setup-header"><h2>Design Visualization Audio</h2></div>
+                <div class="ai-setup-body">
+                    <div class="ai-setup-group">
+                        <div class="ai-setup-label">Target Scenario</div>
+                        <div class="ai-grid-options" id="opt-trance-scenario">
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','scenario',this,'Pre-Match')">Pre-Match Nerves</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','scenario',this,'Comeback')">Comeback After Loss</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','scenario',this,'Final Round')">Final Round Pressure</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','scenario',this,'Manifesting')">Manifesting Title</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','scenario',this,'Injury')">Injury Recovery</div>
+                        </div>
+                    </div>
+                    <div class="ai-setup-group">
+                        <div class="ai-setup-label">Duration</div>
+                        <div class="ai-grid-options" id="opt-trance-duration">
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','duration',this,'5')">5 min (Rapid Reset)</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','duration',this,'10')">10 min (Standard)</div>
+                            <div class="ai-opt-card" onclick="menteeAI.selectOpt('trance','duration',this,'15')">15 min (Deep Trance)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-action-footer">
+                    <button class="ai-btn-glass" style="margin-right:auto; border:none;" onclick="menteeAI.switchView('ai-view-trance-safety')">← Back</button>
+                    <button class="ai-btn-primary" onclick="menteeAI.generateTrance()">Generate Trance</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="ai-view-trance-loading" class="ai-view-section">
+            <div style="text-align:center;">
+                <div class="ai-brain-pulse">🧠</div>
+                <h2 style="font-size:2rem; margin-bottom:12px;">Crafting mental reset...</h2>
+                <p style="color:var(--text-secondary);">Synthesizing binaural beats & semantic script.</p>
+            </div>
+        </div>
+
+        <div id="ai-view-trance-player" class="ai-view-section">
+            <div class="ai-player-ui">
+                <div class="ai-session-meta" id="ai-player-meta">DEEP PERFORMANCE TRANCE</div>
+                <h2 class="ai-session-title">Absolute Focus Protocol</h2>
+                
+                <div class="ai-visualizer" id="ai-audio-vis"></div>
+
+                <div class="ai-progress-wrap">
+                    <div class="ai-progress-bg"><div class="ai-progress-fill" id="ai-progress-bar"></div></div>
+                    <div class="ai-time-indicators">
+                        <span id="ai-time-curr">0:00</span>
+                        <span id="ai-time-tot">10:00</span>
+                    </div>
+                </div>
+
+                <button class="ai-play-btn" id="ai-play-btn" onclick="menteeAI.togglePlay()">
+                    <svg viewBox="0 0 24 24" id="ai-play-icon"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+
+                <div class="ai-script-box" id="ai-script-box"></div>
+                <button class="ai-btn-glass" style="margin: 32px auto 0; justify-content:center; border-color:rgba(255,60,60,0.5); color:#ff6b6b;" onclick="menteeAI.endSession()">End Protocol</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    function generateSession() {
-        const btn = document.querySelector('button');
-        const originalText = btn.innerText;
-        btn.innerText = "Analyzing Psychology...";
-        btn.style.opacity = "0.7";
-        
-        setTimeout(() => {
-            document.getElementById('ai-output').style.display = 'block';
-            btn.innerText = originalText;
-            btn.style.opacity = "1";
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }, 2000);
+const menteeAI = (function() {
+    let state = {
+        gender: 'male', sound: true, 
+        chat: { persona: null, tone: null, goal: null },
+        trance: { scenario: null, duration: null },
+        tPlaying: false, tInterval: null, tProg: 0, tDurSec: 0, audioCtx: null, osc: null
+    };
+
+    function switchView(id) {
+        document.querySelectorAll('.ai-view-section').forEach(el => el.classList.remove('active'));
+        setTimeout(() => document.getElementById(id).classList.add('active'), 50);
     }
+
+    function selectOpt(type, cat, el, val) {
+        document.querySelectorAll(`#opt-${type}-${cat} .ai-opt-card`).forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        state[type][cat] = val;
+    }
+
+    function setGender(gen, btn) {
+        state.gender = gen;
+        document.querySelectorAll('.ai-toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const r = document.querySelector('.ai-app-wrapper');
+        if(gen === 'female') {
+            r.style.setProperty('--accent-main', '#E020FF');
+            r.style.setProperty('--accent-glow', 'rgba(224, 32, 255, 0.3)');
+            r.style.setProperty('--accent-rgb', '224, 32, 255');
+        } else {
+            r.style.setProperty('--accent-main', '#00F0FF');
+            r.style.setProperty('--accent-glow', 'rgba(0, 240, 255, 0.3)');
+            r.style.setProperty('--accent-rgb', '0, 240, 255');
+        }
+    }
+
+    function toggleSound() {
+        state.sound = !state.sound;
+        const btn = document.getElementById('ai-sound-toggle');
+        if(state.sound) {
+            btn.innerText = '🔊 Ambient On';
+            if(!state.audioCtx) { state.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+            if(state.audioCtx.state === 'suspended') state.audioCtx.resume();
+            state.osc = state.audioCtx.createOscillator();
+            const gain = state.audioCtx.createGain();
+            state.osc.type = 'sine'; state.osc.frequency.value = 432;
+            gain.gain.value = 0.01;
+            state.osc.connect(gain); gain.connect(state.audioCtx.destination);
+            state.osc.start();
+        } else {
+            btn.innerText = '🔇 Ambient Off';
+            if(state.osc) { state.osc.stop(); state.osc.disconnect(); }
+        }
+    }
+
+    function endSession() {
+        if(confirm("End current session? Unsaved data will be lost.")) {
+            if(state.tPlaying) togglePlay();
+            switchView('ai-view-hero');
+            document.getElementById('ai-chat-box').innerHTML = '';
+            document.getElementById('ai-script-box').innerHTML = '';
+        }
+    }
+
+    // CHAT
+    function startChat() {
+        if(!state.chat.persona || !state.chat.tone || !state.chat.goal) return alert("Select all configurations.");
+        document.getElementById('ai-chat-title').innerText = state.chat.persona;
+        switchView('ai-view-chat-active');
+        setTimeout(() => appendMsg('ai', `Protocol active. I am your ${state.chat.persona}. Goal: ${state.chat.goal}. Mindset: ${state.chat.tone}. What is the exact thought running through your head right now?`), 600);
+    }
+
+    function sendMsg() {
+        const inp = document.getElementById('ai-chat-input');
+        const msg = inp.value.trim();
+        if(!msg) return;
+        appendMsg('user', msg); inp.value = '';
+        document.getElementById('ai-typing-ind').style.display = 'flex';
+        scrollToBot('ai-chat-box');
+        setTimeout(() => {
+            document.getElementById('ai-typing-ind').style.display = 'none';
+            appendMsg('ai', getAIResponse(msg));
+        }, 1200 + Math.random()*1000);
+    }
+
+    function appendMsg(sender, text) {
+        const box = document.getElementById('ai-chat-box');
+        const d = document.createElement('div');
+        d.className = `ai-message ai-msg-${sender}`; d.innerText = text;
+        box.appendChild(d); scrollToBot('ai-chat-box');
+    }
+    function scrollToBot(id) { const el=document.getElementById(id); el.scrollTop=el.scrollHeight; }
+
+    function getAIResponse(txt) {
+        const l = txt.toLowerCase();
+        if(l.includes('fear')||l.includes('nervous')) return "Fear is adrenaline. Don't fight it—use it. Where do you feel tension right now?";
+        if(l.includes('lose')||l.includes('lost')) return "A loss is a data point, not an identity. What was the tactical breakdown in that moment?";
+        return "I hear the weight in that. Breathe. Center yourself. If you were advising a teammate here, what strategy would you give them?";
+    }
+
+    // TRANCE
+    function generateTrance() {
+        if(!state.trance.scenario || !state.trance.duration) return alert("Select all configurations.");
+        switchView('ai-view-trance-loading');
+        setTimeout(() => { initPlayer(); switchView('ai-view-trance-player'); }, 2500);
+    }
+
+    function initPlayer() {
+        document.getElementById('ai-player-meta').innerText = `${state.trance.scenario.toUpperCase()} • ${state.trance.duration} MIN`;
+        document.getElementById('ai-time-tot').innerText = `${state.trance.duration}:00`;
+        state.tDurSec = parseInt(state.trance.duration) * 60; state.tProg = 0; updateProg();
+        const vis = document.getElementById('ai-audio-vis'); vis.innerHTML = '';
+        for(let i=0; i<30; i++) {
+            const b = document.createElement('div'); b.className='ai-bar'; b.style.animationDelay=`${Math.random()*1.2}s`; vis.appendChild(b);
+        }
+        document.getElementById('ai-script-box').innerHTML=''; state.tPlaying=false;
+        document.getElementById('ai-play-icon').innerHTML='<path d="M8 5v14l11-7z"/>';
+    }
+
+    function togglePlay() {
+        const icon = document.getElementById('ai-play-icon');
+        const bars = document.querySelectorAll('.ai-bar');
+        if(state.tPlaying) {
+            clearInterval(state.tInterval); state.tPlaying=false;
+            icon.innerHTML='<path d="M8 5v14l11-7z"/>';
+            bars.forEach(b=>b.classList.remove('active-vis'));
+        } else {
+            state.tPlaying=true; icon.innerHTML='<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+            bars.forEach(b=>b.classList.add('active-vis'));
+            if(document.getElementById('ai-script-box').innerHTML==='') typeScript();
+            state.tInterval = setInterval(()=>{
+                if(state.tProg >= state.tDurSec) return togglePlay();
+                state.tProg++; updateProg();
+            }, 1000);
+        }
+    }
+
+    function updateProg() {
+        document.getElementById('ai-progress-bar').style.width = `${(state.tProg/state.tDurSec)*100}%`;
+        const m = Math.floor(state.tProg/60), s = state.tProg%60;
+        document.getElementById('ai-time-curr').innerText = `${m}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function typeScript() {
+        const txt = state.trance.scenario==='Pre-Match' ? "Close your eyes... Breathe in deeply... 1... 2... The arena noise fades. You are in absolute flow..." : "Settle your breathing. The rhythm of your heart is the only tempo that matters. Inhale cold focus, exhale tension...";
+        const box = document.getElementById('ai-script-box'); let i=0;
+        function type() {
+            if(!state.tPlaying) return setTimeout(type,100);
+            if(i<txt.length) { box.innerHTML+=txt.charAt(i); i++; setTimeout(type,40); }
+        }
+        type();
+    }
+
+    // PARTICLES
+    const cvs = document.getElementById('ai-bg-canvas'); const ctx = cvs.getContext('2d');
+    let pts = [];
+    function rs() { cvs.width=window.innerWidth; cvs.height=window.innerHeight; }
+    window.addEventListener('resize',rs); rs();
+    class Pt {
+        constructor() { this.x=Math.random()*cvs.width; this.y=Math.random()*cvs.height; this.s=Math.random()*2+0.5; this.sy=Math.random()*-0.5-0.1; this.sx=(Math.random()-0.5)*0.3; this.o=Math.random()*0.5+0.1; }
+        upd() { this.y+=this.sy; this.x+=this.sx; if(this.y<0){ this.y=cvs.height; this.x=Math.random()*cvs.width; } }
+        drw() { ctx.fillStyle=`rgba(${state.gender==='female'?'224,32,255':'0,240,255'},${this.o})`; ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fill(); }
+    }
+    for(let i=0; i<60; i++) pts.push(new Pt());
+    function anim() { ctx.clearRect(0,0,cvs.width,cvs.height); pts.forEach(p=>{p.upd();p.drw();}); requestAnimationFrame(anim); }
+    anim();
+
+    return { setGender, toggleSound, switchView, selectOpt, endSession, startChat, sendMsg, generateTrance, togglePlay };
+})();
 </script>
 {% endblock %}

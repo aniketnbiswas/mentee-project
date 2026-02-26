@@ -1,429 +1,380 @@
-/* mentee/static/css/style.css */
+/* ==========================================================================
+   MENTEE.AI - CORE STYLESHEET
+   Deep Focus (Dark) & Elite Performance (Light) Themes
+   ========================================================================== */
 
-/* --- 1. RESET & FONTS --- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap');
+/* --- 1. RESET, FONTS & THEME VARIABLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-    /* --- PALETTE: Deep Focus Theme --- */
-    --bg-body: #0B1120;
-    --bg-card: #151F32;
-    --bg-glass: rgba(11, 17, 32, 0.95);
-    --text-main: #F0F9FF;
-    --text-muted: #94A3B8;
-    --primary: #06B6D4;
-    --secondary: #3B82F6;
-    --gradient-main: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
-    --accent: #10B981;
-    --danger: #EF4444;
-    --warning: #F59E0B;
-    --radius-md: 12px;
-    --radius-lg: 20px;
-    --radius-pill: 50px;
-    --container-width: 1200px;
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
+:root {
+    /* --- DARK MODE (DEFAULT) --- */
+    --bg-body: #050914;
+    --bg-card: rgba(15, 23, 42, 0.6);
+    --bg-glass: rgba(5, 9, 20, 0.85);
+    
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    
+    --primary: #00F0FF;     /* Neon Cyan */
+    --primary-dim: #00a8b3;
+    --secondary: #3B82F6;   /* Deep Blue */
+    --accent: #10B981;      
+    --danger: #EF4444;      
+    --warning: #F59E0B;     
+    
+    --gradient-main: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+    --hero-glow: rgba(0, 240, 255, 0.08);
+    
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --shadow-glow: 0 4px 20px rgba(0, 240, 255, 0.15);
+    --shadow-deep: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+    /* Component specifics for Dark Mode */
+    --input-bg: rgba(0, 0, 0, 0.3);
+    --cell-bg: rgba(255, 255, 255, 0.03);
+    --cell-hover: rgba(255, 255, 255, 0.08);
+    --btn-text: #000000;
+    
+    /* Global Sizing */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
+    --radius-pill: 50px;
+    --container-width: 1280px;
+    
+    /* Transitions */
+    --trans-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --trans-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- LIGHT MODE (VIBRANT & PREMIUM) --- */
+[data-theme="light"] {
+    --bg-body: #EEF2F6; /* Premium Platinum/Cool-Gray (fixes the hospital white issue) */
+    --bg-card: #FFFFFF; /* Pure white cards float beautifully on the platinum background */
+    --bg-glass: rgba(255, 255, 255, 0.92);
+    
+    --text-main: #0B1120; /* Deepest slate for perfect heading readability */
+    --text-muted: #39485C; /* Much darker slate gray for high legibility on subtexts */
+    
+    --primary: #0055FF; /* Electric True Blue (Massive contrast and energy) */
+    --primary-dim: #0044CC;
+    --secondary: #7000FF; /* Vibrant Purple */
+    --accent: #059669;      
+    --danger: #DC2626;      
+    --warning: #D97706;
+    
+    --gradient-main: linear-gradient(135deg, #0055FF 0%, #7000FF 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,244,248,0.6) 100%);
+    --hero-glow: rgba(0, 85, 255, 0.06); /* Soft electric blue glow for the background */
+    
+    --border-glass: rgba(0, 0, 0, 0.1); /* Slightly stronger border to define cards */
+    --shadow-glow: 0 8px 25px rgba(0, 85, 255, 0.25); /* Vibrant electric shadow */
+    --shadow-deep: 0 12px 35px rgba(11, 17, 32, 0.07); /* Smooth, rich Apple-style drop shadow */
+
+    /* Component specifics for Light Mode */
+    --input-bg: #E2E8F0;
+    --cell-bg: #FFFFFF;
+    --cell-hover: #F1F5F9;
+    --btn-text: #FFFFFF; /* Button text needs to be white on electric blue */
+}
+
+html { scroll-behavior: smooth; }
+
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, sans-serif;
     background-color: var(--bg-body);
     color: var(--text-main);
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-h1, h2, h3, h4 {
+/* --- 2. TYPOGRAPHY & UTILITIES --- */
+h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
-    color: white;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    color: var(--text-main);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    transition: color 0.4s ease;
 }
 
-a { text-decoration: none; transition: 0.3s; color: inherit; }
+a { text-decoration: none; color: inherit; transition: var(--trans-fast); }
 
-/* --- 2. LAYOUT UTILITIES --- */
 .container {
     max-width: var(--container-width);
     margin: 0 auto;
     padding: 0 2rem;
+    width: 100%;
 }
 
 .text-gradient {
     background: var(--gradient-main);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: transparent;
     display: inline-block;
 }
 
+.hidden { display: none !important; }
+
 /* --- 3. NAVBAR --- */
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
+    position: fixed; top: 0; left: 0; width: 100%; height: 90px; z-index: 1000;
     background: var(--bg-glass);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    height: 100px; /* Fixed Height */
-    display: flex;
-    align-items: center;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-glass);
+    display: flex; align-items: center; transition: var(--trans-smooth);
 }
 
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 100%; /* Important: Container fills bar */
-}
+.nav-container { display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%; }
+.logo-area { display: flex; align-items: center; height: 100%; }
+.logo-img { height: 60px; width: auto; object-fit: contain; transition: var(--trans-fast); }
+.logo-img:hover { transform: scale(1.05); filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.4)); }
+[data-theme="light"] .logo-img:hover { filter: drop-shadow(0 0 10px rgba(0, 85, 255, 0.3)); }
 
-.logo-area {
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
+/* --- 4. DROPDOWN --- */
+.nav-links { display: flex; gap: 2.5rem; align-items: center; height: 100%; }
+.nav-links a { color: var(--text-muted); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.5px; }
+.nav-links a:hover { color: var(--primary); }
 
-.logo-img {
-    height: 80px;
-    width: auto;
-    object-fit: contain;
-    display: block;
-}
-
-/* --- 4. DROPDOWN (BULLETPROOF FIX) --- */
-.nav-links { 
-    display: flex; 
-    gap: 2.5rem; 
-    align-items: center; 
-    height: 100%; /* Links container fills full navbar height */
-}
-
-.nav-links a { color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
-.nav-links a:hover { color: white; }
-
-.dropdown {
-    position: relative;
-    height: 100%;           /* Fills full navbar height (100px) */
-    display: flex;
-    align-items: center;    /* Centers text vertically */
-}
-
-.dropbtn {
-    color: var(--text-muted);
-    font-weight: 500;
-    cursor: pointer;
-    height: 100%;           /* Button fills full height */
-    display: flex;
-    align-items: center;    /* Centers text inside button */
-    padding: 0 10px;        /* Adds hit area width */
-}
-
-.dropdown:hover .dropbtn { color: white; }
+.dropdown { position: relative; height: 100%; display: flex; align-items: center; }
+.dropbtn { color: var(--text-muted); font-weight: 600; cursor: pointer; height: 100%; display: flex; align-items: center; padding: 0 10px; transition: var(--trans-fast); }
+.dropdown:hover .dropbtn { color: var(--primary); }
 
 .dropdown-content {
-    display: none;
-    position: absolute;
+    opacity: 0; visibility: hidden; transform: translateY(15px);
+    position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(15px);
     background-color: var(--bg-card);
-    min-width: 220px;
-    box-shadow: 0px 8px 24px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: var(--radius-md);
-    z-index: 1001;
-
-    /* POSITIONING FIX */
-    top: 90%; /* Starts overlapping the navbar slightly */
-    left: 0;
-    padding-top: 10px; /* Internal spacing */
+    backdrop-filter: blur(20px); min-width: 240px;
+    box-shadow: var(--shadow-deep); border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md); z-index: 1001; padding: 8px 0;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
 }
 
-/* THE INVISIBLE BRIDGE: This connects the navbar to the menu */
-.dropdown-content::before {
-    content: "";
-    position: absolute;
-    top: -20px;  /* Extends 20px UP towards the navbar */
-    left: 0;
-    width: 100%;
-    height: 20px;
-    background: transparent; /* Invisible */
-}
+.dropdown-content::before { content: ""; position: absolute; top: -20px; left: 0; width: 100%; height: 20px; background: transparent; }
+.dropdown:hover .dropdown-content { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
 .dropdown-content a {
-    color: var(--text-muted);
-    padding: 14px 20px;
-    display: block;
-    border-bottom: 1px solid rgba(255,255,255,0.02);
-    font-size: 0.9rem;
-    line-height: normal;
+    color: var(--text-main); padding: 12px 24px; display: block;
+    font-size: 0.9rem; font-weight: 500; transition: var(--trans-fast); border-left: 3px solid transparent;
 }
-
 .dropdown-content a:hover {
-    background-color: rgba(6, 182, 212, 0.1);
-    color: white;
+    background: var(--input-bg); color: var(--primary);
+    border-left: 3px solid var(--primary); padding-left: 28px;
 }
-
-.dropdown:hover .dropdown-content { display: block; }
 
 /* --- 5. BUTTONS --- */
 .btn {
     display: inline-flex; align-items: center; justify-content: center;
-    padding: 0.8rem 2rem; border-radius: var(--radius-pill);
-    font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none;
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 14px 32px; border-radius: var(--radius-pill);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; 
+    cursor: pointer; border: none; letter-spacing: 0.5px; transition: var(--trans-smooth); text-transform: uppercase;
 }
-.btn-primary {
-    background: var(--gradient-main);
-    color: white;
-    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5); }
+
+.btn-primary { background: var(--gradient-main); color: var(--btn-text); box-shadow: var(--shadow-glow); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 85, 255, 0.4); }
+.btn-primary:active { transform: translateY(1px); }
+
 .btn-outline {
-    background: transparent; border: 1px solid rgba(255,255,255,0.15); color: white;
+    background: transparent; border: 1px solid var(--border-glass); 
+    color: var(--text-main); backdrop-filter: blur(10px);
 }
-.btn-outline:hover { border-color: var(--primary); background: rgba(6, 182, 212, 0.1); }
+.btn-outline:hover { 
+    border-color: var(--primary); background: var(--input-bg); color: var(--primary); box-shadow: var(--shadow-glow);
+}
 
-/* --- 6. HERO & SECTIONS --- */
+/* --- 6. HERO SECTION --- */
 .hero {
-    padding: 260px 0 100px;
-    text-align: center;
-    background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15) 0%, rgba(11, 17, 32, 0) 60%);
-    min-height: 80vh;
+    padding: 220px 0 120px; text-align: center; min-height: 85vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 50% 10%, var(--hero-glow) 0%, transparent 60%);
 }
-.hero h1 { font-size: 4.5rem; margin-bottom: 1.5rem; margin-top: 0; }
-.hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2.5rem; }
+.hero h1 { font-size: clamp(3rem, 6vw, 5.5rem); margin-bottom: 1.5rem; font-weight: 800; }
+.hero p { font-size: clamp(1.1rem, 2vw, 1.25rem); color: var(--text-muted); max-width: 650px; margin: 0 auto 3rem; }
 
-/* --- 7. CARDS & GAMES --- */
+/* --- 7. CARDS & UI ELEMENTS --- */
 .feature-card {
-    background: var(--bg-card); padding: 2rem; border-radius: var(--radius-lg);
-    border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s;
-    position: relative; overflow: hidden;
+    background: var(--bg-card); padding: 2.5rem; border-radius: var(--radius-lg);
+    border: 1px solid var(--border-glass); backdrop-filter: blur(12px);
+    transition: var(--trans-smooth); position: relative; overflow: hidden;
+    box-shadow: var(--shadow-deep);
 }
-.feature-card:hover { transform: translateY(-5px); border-color: rgba(6, 182, 212, 0.3); }
+.feature-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--gradient-glass); pointer-events: none;
+}
+.feature-card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: var(--shadow-deep), var(--shadow-glow); }
 
 .icon-box {
-    width: 50px; height: 50px; background: rgba(6, 182, 212, 0.1); color: var(--primary);
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; margin-bottom: 1.5rem;
-}
-.icon-box-small {
-    width: 40px; height: 40px; background: rgba(6, 182, 212, 0.1); color: var(--primary);
-    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    width: 56px; height: 56px; background: var(--input-bg); color: var(--primary);
+    border: 1px solid var(--border-glass); border-radius: 14px; 
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 1.5rem; box-shadow: inset 0 0 15px rgba(0, 85, 255, 0.05);
 }
 
-/* GAME UI */
-.game-header { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+.icon-box-small {
+    width: 40px; height: 40px; background: var(--input-bg); color: var(--primary);
+    border-radius: 10px; border: 1px solid var(--border-glass);
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+
+/* Game Grids / Drills */
 .game-area {
-    background: #0F172A; height: 220px; border-radius: var(--radius-md);
+    background: var(--input-bg); height: 250px; border-radius: var(--radius-md);
     position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
-    border: 1px solid rgba(255,255,255,0.05); cursor: pointer; user-select: none;
+    border: 1px solid var(--border-glass); cursor: pointer; user-select: none;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
 }
 .game-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(11, 17, 32, 0.85); display: flex; align-items: center; justify-content: center;
-    font-weight: 600; letter-spacing: 1px; color: white; z-index: 10;
+    background: var(--bg-glass); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; color: var(--primary); z-index: 10; transition: opacity 0.3s;
 }
+.game-area:hover .game-overlay { opacity: 0.9; }
+
 .game-metrics {
-    display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-muted);
-}
-.status-indicator {
-    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
-    color: var(--accent); background: rgba(16, 185, 129, 0.1);
-    padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px;
+    display: flex; justify-content: space-between; margin-top: 1.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border-glass); font-size: 0.9rem; color: var(--text-muted); font-weight: 500;
 }
 
-/* GAME SPECIFICS */
-.pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 30px; width: 100%; height: 100%; }
-.pattern-block { background: rgba(255,255,255,0.05); border-radius: 8px; transition: 0.1s; }
-.pattern-block.active { background: var(--primary); box-shadow: 0 0 20px var(--primary); }
-
-.focus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; height: 100%; padding: 20px; }
-.focus-cell { 
-    background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;
-    border-radius: 6px; font-weight: 700; font-size: 1.2rem; transition: 0.1s; 
+.pattern-block, .focus-cell { 
+    background: var(--cell-bg); border: 1px solid var(--border-glass); 
+    border-radius: 10px; transition: var(--trans-fast); color: var(--text-main);
 }
-.focus-cell:active { background: var(--primary); }
+.pattern-block.active { background: var(--primary); border-color: var(--primary); box-shadow: var(--shadow-glow); }
+.focus-cell:hover { background: var(--cell-hover); color: var(--primary); border-color: var(--primary); }
 
-/* --- 8. FOOTER --- */
-footer {
-    border-top: 1px solid rgba(255,255,255,0.05); padding: 4rem 0; margin-top: 6rem;
-    text-align: center; color: var(--text-muted);
-}
-/* --- 8. JOURNAL PAGE STYLES --- */
-.journal-layout {
-    display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 2rem;
-    align-items: start;
-}
+/* --- 8. ZEN JOURNAL REDESIGN --- */
+.journal-layout { display: grid; grid-template-columns: 340px 1fr; gap: 3rem; align-items: start; padding-top: 40px; }
+.journal-panel { background: var(--bg-card); backdrop-filter: blur(24px); border: 1px solid var(--border-glass); box-shadow: var(--shadow-deep); padding: 2.5rem; border-radius: var(--radius-lg); }
 
-.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.btn-icon { background: none; border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display:flex; align-items:center; justify-content:center; }
-.btn-icon:hover { color: white; border-color: var(--primary); }
-
-.calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-
-.day-cell { 
-    aspect-ratio: 1; display: flex; align-items: center; justify-content: center; 
-    border-radius: 50%; cursor: pointer; font-size: 0.9rem; transition: 0.2s; position: relative; color: var(--text-muted);
-}
-.day-cell:hover { background: rgba(255,255,255,0.05); color: white; }
-.day-cell.today { border: 1px solid var(--primary); color: var(--primary); font-weight: bold; }
-.day-cell.selected { background: var(--primary); color: white; }
-.day-cell.has-entry::after {
-    content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; 
-    background: var(--accent); border-radius: 50%;
-}
-
-.editor-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-.form-group { margin-bottom: 1.5rem; }
-textarea { height: 80px; resize: vertical; }
-
-@media (max-width: 900px) {
-    .journal-layout { grid-template-columns: 1fr; }
-}
-/* --- 9. ZEN JOURNAL REDESIGN --- */
-
-/* The Main Layout */
-.journal-layout {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 2.5rem;
-    align-items: start;
-}
-
-/* The Cards (Glassmorphism) */
-.feature-card.journal-panel {
-    background: rgba(21, 31, 50, 0.6); /* More transparent */
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    padding: 2.5rem;
-}
-
-/* --- CALENDAR STYLING --- */
-.calendar-header {
-    display: flex; justify-content: space-between; align-items: center; 
-    margin-bottom: 1.5rem; padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.calendar-header h3 { font-size: 1.1rem; margin: 0; letter-spacing: 0.5px; }
-
-.btn-icon {
-    background: rgba(255,255,255,0.05); border: none; color: var(--text-muted);
-    border-radius: 50%; width: 32px; height: 32px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: 0.2s;
-}
-.btn-icon:hover { background: var(--primary); color: white; transform: scale(1.1); }
-
-.calendar-weekdays {
-    display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
-    font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;
-    letter-spacing: 1px; margin-bottom: 1rem; font-weight: 600;
-}
-
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass); }
+.calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; font-weight: 700; }
 .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
 
 .day-cell {
     aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-    border-radius: 10px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
-    position: relative; color: var(--text-muted); background: rgba(255,255,255,0.02);
+    border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500;
+    transition: var(--trans-fast); position: relative; color: var(--text-main); 
+    background: var(--cell-bg); border: 1px solid var(--border-glass);
 }
+.day-cell:hover { border-color: var(--primary); color: var(--primary); background: var(--cell-hover); }
+.day-cell.today { border: 2px solid var(--primary); font-weight: 700; }
+.day-cell.selected { background: var(--primary); color: var(--btn-text); box-shadow: var(--shadow-glow); font-weight: 700; border-color: var(--primary); }
+.day-cell.has-entry::after { content: ''; position: absolute; bottom: 6px; width: 5px; height: 5px; background: var(--warning); border-radius: 50%; }
 
-.day-cell:hover { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
-.day-cell.today { border: 1px solid var(--primary); color: var(--primary); font-weight: 700; }
-.day-cell.selected { background: var(--gradient-main); color: white; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4); }
-
-/* The "Has Entry" Dot */
-.day-cell.has-entry::after {
-    content: ''; position: absolute; bottom: 6px; width: 4px; height: 4px;
-    background: var(--warning); border-radius: 50%; box-shadow: 0 0 5px var(--warning);
-}
-
-/* --- EDITOR STYLING (The Big Fix) --- */
-.editor-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 2rem;
-}
-
+.editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
 .form-section {
-    margin-bottom: 2rem;
-    background: rgba(0,0,0,0.2); /* Darker inner background */
-    padding: 1.5rem;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255,255,255,0.03);
-    transition: 0.3s;
+    margin-bottom: 2rem; background: var(--input-bg); padding: 1.8rem;
+    border-radius: var(--radius-md); border: 1px solid var(--border-glass); transition: var(--trans-smooth);
+}
+.form-section:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.1); }
+.form-label { display: block; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1rem; font-weight: 700; }
+
+.zen-input { width: 100%; background: transparent; border: none; color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 1.05rem; line-height: 1.7; resize: none; outline: none; min-height: 40px; }
+.zen-input::placeholder { color: var(--text-muted); opacity: 0.8; font-style: italic; }
+
+input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: var(--border-glass); border-radius: 4px; }
+input[type=range]::-webkit-slider-thumb { height: 24px; width: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; -webkit-appearance: none; margin-top: -9px; box-shadow: var(--shadow-glow); border: 2px solid var(--bg-card); transition: var(--trans-fast); }
+#rating-display { font-size: 1.8rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--primary); text-shadow: var(--shadow-glow); }
+
+/* --- 9. FOOTER & RESPONSIVE --- */
+footer { border-top: 1px solid var(--border-glass); padding: 4rem 0; margin-top: 6rem; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+
+@media (max-width: 1024px) { .journal-layout { grid-template-columns: 1fr; gap: 2rem; } .calendar-panel { order: -1; } }
+@media (max-width: 768px) { .nav-links { display: none; } .hero { padding: 180px 0 80px; } }
+/* ==========================================================================
+   LIGHT MODE TYPOGRAPHY ENFORCER 
+   (Forces hardcoded white HTML text to become dark & readable)
+   ========================================================================== */
+
+/* 1. Force all headings to use the dark Slate color in light mode */
+[data-theme="light"] h1, 
+[data-theme="light"] h2, 
+[data-theme="light"] h3, 
+[data-theme="light"] h4, 
+[data-theme="light"] h5, 
+[data-theme="light"] h6 {
+    color: var(--text-main) !important;
 }
 
-.form-section:focus-within {
-    border-color: rgba(6, 182, 212, 0.3);
-    background: rgba(0,0,0,0.3);
+/* 2. Force paragraphs, labels, and subtext to use the highly readable Dark Gray */
+[data-theme="light"] p,
+[data-theme="light"] .text-muted,
+[data-theme="light"] label,
+[data-theme="light"] li,
+[data-theme="light"] .game-metrics,
+[data-theme="light"] .status-indicator {
+    color: var(--text-muted) !important;
 }
 
-.form-label {
-    display: block; color: var(--text-muted); font-size: 0.8rem;
-    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem;
-    font-weight: 600;
+/* 3. MAGIC FIX: Automatically target any inline 'color: white' in your HTML and invert it */
+[data-theme="light"] [style*="color: white"],
+[data-theme="light"] [style*="color: #FFF"],
+[data-theme="light"] [style*="color: #ffffff"],
+[data-theme="light"] [style*="color:white"] {
+    color: var(--text-main) !important;
 }
 
-/* PRETTY INPUTS */
-.zen-input {
-    width: 100%;
-    background: transparent; /* Seamless feel */
-    border: none;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    line-height: 1.6;
-    resize: none;
-    outline: none;
-    min-height: 40px;
+[data-theme="light"] [style*="color: var(--text-muted)"] {
+    color: var(--text-muted) !important;
 }
 
-.zen-input::placeholder { color: rgba(255,255,255,0.2); font-style: italic; }
-
-/* CUSTOM SLIDER */
-.range-container {
-    display: flex; align-items: center; gap: 1.5rem;
-    padding: 0.5rem 0;
+/* 4. Fix Navbar Link Contrast */
+[data-theme="light"] .nav-links a:not(.btn) {
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
 }
 
-input[type=range] {
-    -webkit-appearance: none; width: 100%; background: transparent;
+[data-theme="light"] .nav-links a:not(.btn):hover {
+    color: var(--primary) !important;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
-    width: 100%; height: 6px; cursor: pointer;
-    background: rgba(255,255,255,0.1); border-radius: 3px;
+/* 5. Fix Dropdown Contrast */
+[data-theme="light"] .dropdown-content a {
+    color: var(--text-main) !important;
 }
 
-input[type=range]::-webkit-slider-thumb {
-    height: 20px; width: 20px; border-radius: 50%;
-    background: var(--primary); cursor: pointer;
-    -webkit-appearance: none; margin-top: -7px;
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
-    transition: transform 0.2s;
+[data-theme="light"] .dropdown-content a:hover {
+    color: var(--primary) !important;
+    background: var(--input-bg) !important;
+}
+/* ==========================================================================
+   BUG FIX: FEATURE CARD GLARE & VISIBILITY
+   (Pushes the white glass glare behind the text)
+   ========================================================================== */
+
+/* 1. Create a stacking context for the cards */
+.feature-card {
+    z-index: 1; 
 }
 
-input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.2); }
-
-#rating-display {
-    font-size: 1.5rem; font-weight: 700; color: var(--primary);
-    min-width: 40px; text-align: center;
+/* 2. Push the gradient glare firmly into the background */
+.feature-card::before {
+    z-index: -1; 
 }
 
-/* SAVE STATUS ANIMATION */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-.status-pill {
-    font-size: 0.8rem; padding: 4px 12px; border-radius: 20px;
-    background: rgba(255,255,255,0.05); color: var(--text-muted);
-    animation: fadeIn 0.3s ease;
+/* 3. Force ALL content inside the cards (icons, text, buttons) to sit above the glare */
+.feature-card > * {
+    position: relative;
+    z-index: 2;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-    .journal-layout { grid-template-columns: 1fr; }
-    .calendar-panel { order: -1; } /* Calendar on top on mobile */
+/* 4. Give the icon boxes a beautiful, crisp pop in Light Mode */
+[data-theme="light"] .icon-box,
+[data-theme="light"] .icon-box-small {
+    background: #FFFFFF !important;
+    box-shadow: 0 4px 15px rgba(0, 85, 255, 0.1) !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
 }
